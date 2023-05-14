@@ -5,7 +5,10 @@ body {
     justify-content: center;
     height: 100vh;
 }
-
+#global-timer{
+   font-size: 24px;
+   margin-bottom: 80px;
+}
 #voice-status {
     color: red;
     font-size: 24px;

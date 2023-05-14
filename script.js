@@ -1,12 +1,15 @@
 // Initialize variables and get UI elements
 let VoiceRecognized = false;
 let timer = 0;
+let globalTimer = 0;
 let timeoutId = null;
 let intervalId = null;
+let globalIntervalId = null;
 let stopRequested = false;  // Flag to indicate if stop was requested
 const voiceStatus = document.getElementById('voice-status');
 const timerDisplay = document.getElementById('timer');
 const transcriptList = document.getElementById('transcript-list');
+const globalTimerDisplay = document.getElementById('global-timer');
 
 let recognition;
 
@@ -25,9 +28,12 @@ function setupSpeechRecognition() {
                 // Get transcript
                 let transcript = event.results[i][0].transcript;
 
+                // Add timestamp to the transcript
+                let timestamp = new Date(globalTimer * 1000).toISOString().substr(14, 5);
+
                 // Add transcript to the list
                 let listItem = document.createElement('li');
-                listItem.textContent = transcript;
+                listItem.textContent = `${timestamp} - ${transcript}`;
                 transcriptList.appendChild(listItem);
             }
         }
@@ -82,6 +88,19 @@ function startTimer() {
     }, 1000);
 }
 
+// Function to start the global timer
+function startGlobalTimer() {
+    globalTimer = 0;
+    globalIntervalId = setInterval(function() {
+        globalTimer++;
+    }, 1000);
+}
+
+// Function to stop the global timer
+function stopGlobalTimer() {
+    clearInterval(globalIntervalId);
+}
+
 // Function to start listening to the microphone
 function startListening() {
     // Reset stopRequested flag
@@ -89,6 +108,7 @@ function startListening() {
     setupSpeechRecognition();
     recognition.start();
     startTimer();
+    startGlobalTimer();  // Start the global timer
 }
 
 // Function to stop listening to the microphone
@@ -98,4 +118,32 @@ function stopListening() {
     recognition.stop();
     clearTimeout(timeoutId);
     clearInterval(intervalId); // Clear the timer interval
+    stopGlobalTimer();  // Stop the global timer
+}
+
+// Get the Start and Stop buttons
+const startButton = document.getElementById('start-button');
+const stopButton = document.getElementById('stop-button');
+
+// Set up button event listeners
+startButton.addEventListener('click', startListening);
+stopButton.addEventListener('click', stopListening);
+
+// Function to start the global timer
+function startGlobalTimer() {
+    globalTimer = 0;
+    globalIntervalId = setInterval(function() {
+        globalTimer++;
+        // Convert the timer value to mm:ss format and display it in the UI
+        let minutes = Math.floor(globalTimer / 60);
+        let seconds = globalTimer % 60;
+        globalTimerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }, 1000);
+}
+
+// Function to stop the global timer
+function stopGlobalTimer() {
+    clearInterval(globalIntervalId);
+    // Reset the global timer display in the UI
+    globalTimerDisplay.textContent = '0';
 }
