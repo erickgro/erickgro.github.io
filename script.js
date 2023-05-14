@@ -3,16 +3,16 @@ let VoiceRecognized = false;
 let timer = 0;
 let timeoutId = null;
 let intervalId = null;
+let stopRequested = false;  // Flag to indicate if stop was requested
 const voiceStatus = document.getElementById('voice-status');
 const timerDisplay = document.getElementById('timer');
 const transcriptList = document.getElementById('transcript-list');
 
-// Check if SpeechRecognition is available
-if (!('webkitSpeechRecognition' in window)) {
-    alert("Your Browser does not support the Speech Recognition API. Please try another browser like Chrome.");
-} else {
-    // Initialize SpeechRecognition
-    var recognition = new webkitSpeechRecognition();
+let recognition;
+
+// Set up SpeechRecognition
+function setupSpeechRecognition() {
+    recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = 'es-MX'; // Set language to Spanish (Mexico)
@@ -51,9 +51,20 @@ if (!('webkitSpeechRecognition' in window)) {
         }, 2000);
     }
 
+    // Restart the service when it ends
+    recognition.onend = function() {
+        // Check if the stopListening function was called, if not restart the service
+        if(!stopRequested) {
+            recognition.start();
+        }
+    }
+
     recognition.onerror = function(event) {
         console.log('Error occurred in recognition: ' + event.error);
-    }
+        if (event.error === 'no-speech') {
+            recognition.start();
+        }
+    };
 }
 
 // Function to start the timer
@@ -73,12 +84,17 @@ function startTimer() {
 
 // Function to start listening to the microphone
 function startListening() {
+    // Reset stopRequested flag
+    stopRequested = false;
+    setupSpeechRecognition();
     recognition.start();
     startTimer();
 }
 
 // Function to stop listening to the microphone
 function stopListening() {
+    // Set stopRequested flag
+    stopRequested = true;
     recognition.stop();
     clearTimeout(timeoutId);
     clearInterval(intervalId); // Clear the timer interval
