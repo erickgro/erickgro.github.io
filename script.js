@@ -12,6 +12,19 @@ const transcriptList = document.getElementById('transcript-list');
 const globalTimerDisplay = document.getElementById('global-timer');
 
 let recognition;
+let mediaRecorder;
+let chunks = [];
+
+function setupMediaRecorder(stream) {
+    mediaRecorder = new MediaRecorder(stream);
+
+    mediaRecorder.ondataavailable = function(e) {
+        chunks.push(e.data);
+    };
+}
+
+navigator.mediaDevices.getUserMedia({audio: true})
+    .then(setupMediaRecorder);
 
 // Set up SpeechRecognition
 function setupSpeechRecognition() {
@@ -34,6 +47,29 @@ function setupSpeechRecognition() {
                 // Add transcript to the list
                 let listItem = document.createElement('li');
                 listItem.textContent = `${timestamp} - ${transcript}`;
+
+                // Create "Play" button for this transcript
+                let playButton = document.createElement('button');
+                playButton.textContent = 'Play';
+                playButton.onclick = function() {
+                    let blob = new Blob(chunks, {'type': 'audio/ogg; codecs=opus'});
+                    let audioURL = URL.createObjectURL(blob);
+                    let audio = new Audio(audioURL);
+                    audio.play();
+                };
+
+                // Create "Pause" button for this transcript
+                let pauseButton = document.createElement('button');
+                pauseButton.textContent = 'Pause';
+                pauseButton.onclick = function() {
+                    let blob = new Blob(chunks, {'type': 'audio/ogg; codecs=opus'});
+                    let audioURL = URL.createObjectURL(blob);
+                    let audio = new Audio(audioURL);
+                    audio.pause();
+                };
+
+                listItem.appendChild(playButton);
+                listItem.appendChild(pauseButton);
                 transcriptList.appendChild(listItem);
             }
         }
@@ -54,10 +90,19 @@ function setupSpeechRecognition() {
             voiceStatus.textContent = 'Undetected';
             voiceStatus.style.color = 'red';
             startTimer();
+
+            // Stop recording when no voice is detected
+            mediaRecorder.stop();
         }, 2000);
+
+        // Start recording when voice is detected
+        if (mediaRecorder.state === 'inactive') {
+            chunks = [];  // Clear the old recorded chunks
+            mediaRecorder.start();
+        }
     }
 
-    // Restart the service when it ends
+     // Restart the service when it ends
     recognition.onend = function() {
         // Check if the stopListening function was called, if not restart the service
         if(!stopRequested) {
@@ -93,12 +138,18 @@ function startGlobalTimer() {
     globalTimer = 0;
     globalIntervalId = setInterval(function() {
         globalTimer++;
+        // Convert the timer value to mm:ss format and display it in the UI
+        let minutes = Math.floor(globalTimer / 60);
+        let seconds = globalTimer % 60;
+        globalTimerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }, 1000);
 }
 
 // Function to stop the global timer
 function stopGlobalTimer() {
     clearInterval(globalIntervalId);
+    // Reset the global timer display in the UI
+    globalTimerDisplay.textContent = '0';
 }
 
 // Function to start listening to the microphone
@@ -119,6 +170,11 @@ function stopListening() {
     clearTimeout(timeoutId);
     clearInterval(intervalId); // Clear the timer interval
     stopGlobalTimer();  // Stop the global timer
+
+    // Stop recording when the user presses the "Stop" button
+    if (mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+    }
 }
 
 // Get the Start and Stop buttons
@@ -128,22 +184,3 @@ const stopButton = document.getElementById('stop-button');
 // Set up button event listeners
 startButton.addEventListener('click', startListening);
 stopButton.addEventListener('click', stopListening);
-
-// Function to start the global timer
-function startGlobalTimer() {
-    globalTimer = 0;
-    globalIntervalId = setInterval(function() {
-        globalTimer++;
-        // Convert the timer value to mm:ss format and display it in the UI
-        let minutes = Math.floor(globalTimer / 60);
-        let seconds = globalTimer % 60;
-        globalTimerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }, 1000);
-}
-
-// Function to stop the global timer
-function stopGlobalTimer() {
-    clearInterval(globalIntervalId);
-    // Reset the global timer display in the UI
-    globalTimerDisplay.textContent = '0';
-}
