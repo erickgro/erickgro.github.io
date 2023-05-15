@@ -190,6 +190,11 @@ function stopListening() {
                 // Convert timestamp to seconds and set as current time for audio element
                 let [minutes, seconds] = timestamp.split(':');
                 audioElement.currentTime = minutes * 60 + Number(seconds);
+                // Added line to pause any currently playing audio
+                if (!audioElement.paused) {
+                    audioElement.pause();
+                }
+                // Then, play the audio from the indicated time
                 audioElement.play();
             };
             listItem.innerHTML = ''; // Clear the list item content
