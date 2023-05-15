@@ -105,6 +105,7 @@ function startTimer() {
         }
     }, 1000);
 }
+
 // Function to start the global timer
 function startGlobalTimer() {
     globalTimer = 0;
@@ -134,17 +135,6 @@ function startListening() {
     }
     startTimer();
     startGlobalTimer();  // Start the global timer
-
-    // Start recording
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(function(stream) {
-            mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.start();
-
-            mediaRecorder.ondataavailable = function(e) {
-                recordedChunks.push(e.data);
-            };
-        });
 }
 
 // Function to stop listening to the microphone
@@ -155,8 +145,23 @@ function stopListening() {
     clearTimeout(timeoutId);
     clearInterval(intervalId); // Clear the timer interval
     stopGlobalTimer();  // Stop the global timer
+}
 
-    // Stop recording
+// Function to setup recording
+function setupRecording() {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(function(stream) {
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.start();
+
+        mediaRecorder.ondataavailable = function(e) {
+            recordedChunks.push(e.data);
+        };
+    });
+}
+
+// Function to stop recording
+function stopRecording() {
     mediaRecorder.stop();
 
     // Process the recorded audio data into an ogg file with opus codec
@@ -185,5 +190,12 @@ const startButton = document.getElementById('start-button');
 const stopButton = document.getElementById('stop-button');
 
 // Set up button event listeners
-startButton.addEventListener('click', startListening);
-stopButton.addEventListener('click', stopListening);
+startButton.addEventListener('click', function() {
+    startListening();
+    setupRecording(); // Start recording immediately when the button is clicked
+});
+
+stopButton.addEventListener('click', function() {
+    stopListening();
+    stopRecording(); // Stop recording immediately when the button is clicked
+});
