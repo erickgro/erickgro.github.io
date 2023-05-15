@@ -57,7 +57,7 @@ function setupSpeechRecognition() {
         }
 
         // Set VoiceRecognized to true when human voice is detected
-        voiceStatus.textContent = 'Voice detected';
+        voiceStatus.textContent = 'Voice detecteddd';
         voiceStatus.style.color = 'green';
 
         // Reset timer
