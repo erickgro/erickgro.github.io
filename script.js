@@ -16,7 +16,7 @@ const globalTimerDisplay = document.getElementById('global-timer');
 let recognition;
 let mediaRecorder;
 let recordedChunks = [];
-let audioElement;
+let audioElement = null;  // Initialize audioElement in global scope
 let transcripts = []; // Add this line to store the transcripts and timestamps
 
 // Set up SpeechRecognition
@@ -168,8 +168,8 @@ function stopListening() {
         recordedChunks = [];
         let audioURL = window.URL.createObjectURL(blob);
 
-        // Create a new audio element and set the source to the processed audio
-        audioElement = new Audio(audioURL);
+        // Update the source of the audio element
+        audioElement.src = audioURL;
 
         // Add the audio element to the UI
         let audioListItem = document.createElement('li');
@@ -190,11 +190,6 @@ function stopListening() {
                 // Convert timestamp to seconds and set as current time for audio element
                 let [minutes, seconds] = timestamp.split(':');
                 audioElement.currentTime = minutes * 60 + Number(seconds);
-                // Added line to pause any currently playing audio
-                if (!audioElement.paused) {
-                    audioElement.pause();
-                }
-                // Then, play the audio from the indicated time
                 audioElement.play();
             };
             listItem.innerHTML = ''; // Clear the list item content
