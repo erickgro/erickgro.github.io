@@ -17,6 +17,7 @@ let recognition;
 let mediaRecorder;
 let recordedChunks = [];
 let audioElement;
+let transcripts = []; // Add this line to store the transcripts and timestamps
 
 // Set up SpeechRecognition
 function setupSpeechRecognition() {
@@ -45,23 +46,12 @@ function setupSpeechRecognition() {
                 // Add timestamp to the transcript
                 let timestamp = new Date(voiceRecognitionStart * 1000).toISOString().substr(14, 5);
 
+                // Save the transcript and timestamp to the array
+                transcripts.push({timestamp: timestamp, transcript: transcript});
+
                 // Add transcript to the list
                 let listItem = document.createElement('li');
-                let link = document.createElement('a');
-                let transcriptText = document.createElement('span'); // Create a new span element for the transcript
-
-                link.href = '#';
-                link.textContent = timestamp; // Only put the timestamp inside the anchor
-                link.onclick = function() {
-                    // Convert timestamp to seconds and set as current time for audio element
-                    let [minutes, seconds] = timestamp.split(':');
-                    audioElement.currentTime = minutes * 60 + Number(seconds);
-                    audioElement.play();
-                };
-                transcriptText.textContent = ` - ${transcript}`; // Add the transcript to the span
-
-                listItem.appendChild(link);
-                listItem.appendChild(transcriptText); // Append the transcript span to the list item
+                listItem.textContent = `${timestamp} - ${transcript}`;
                 transcriptList.appendChild(listItem);
             }
         }
@@ -188,6 +178,24 @@ function stopListening() {
         audioPlayer.src = audioURL;
         audioListItem.appendChild(audioPlayer);
         transcriptList.appendChild(audioListItem);
+
+        // Add hyperlinks to the timestamps
+        for (let i = 0; i < transcriptList.children.length - 1; i++) { // -1 to exclude the audio player item
+            let listItem = transcriptList.children[i];
+            let timestamp = transcripts[i].timestamp;
+            let link = document.createElement('a');
+            link.href = '#';
+            link.textContent = timestamp;
+            link.onclick = function() {
+                // Convert timestamp to seconds and set as current time for audio element
+                let [minutes, seconds] = timestamp.split(':');
+                audioElement.currentTime = minutes * 60 + Number(seconds);
+                audioElement.play();
+            };
+            listItem.innerHTML = ''; // Clear the list item content
+            listItem.appendChild(link);
+            listItem.appendChild(document.createTextNode(` - ${transcripts[i].transcript}`)); // Append the transcript to the list item
+        }
     };
 }
 
