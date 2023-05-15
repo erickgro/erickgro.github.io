@@ -5,7 +5,8 @@ let globalTimer = 0;
 let timeoutId = null;
 let intervalId = null;
 let globalIntervalId = null;
-let stopRequested = false;  // Flag to indicate if stop was requested
+let stopRequested = false;
+let isListening = false;
 const voiceStatus = document.getElementById('voice-status');
 const timerDisplay = document.getElementById('timer');
 const transcriptList = document.getElementById('transcript-list');
@@ -13,18 +14,8 @@ const globalTimerDisplay = document.getElementById('global-timer');
 
 let recognition;
 let mediaRecorder;
-let chunks = [];
-
-function setupMediaRecorder(stream) {
-    mediaRecorder = new MediaRecorder(stream);
-
-    mediaRecorder.ondataavailable = function(e) {
-        chunks.push(e.data);
-    };
-}
-
-navigator.mediaDevices.getUserMedia({audio: true})
-    .then(setupMediaRecorder);
+let recordedChunks = [];
+let audioElement;
 
 // Set up SpeechRecognition
 function setupSpeechRecognition() {
@@ -34,6 +25,10 @@ function setupSpeechRecognition() {
     recognition.lang = 'es-MX'; // Set language to Spanish (Mexico)
 
     // Define SpeechRecognition event handlers
+    recognition.onstart = function() {
+        isListening = true; // Set isListening to true when the service starts
+    }
+
     recognition.onresult = function(event) {
         for (let i = event.resultIndex; i < event.results.length; i++) {
             // Only add final results to the list
@@ -46,30 +41,16 @@ function setupSpeechRecognition() {
 
                 // Add transcript to the list
                 let listItem = document.createElement('li');
-                listItem.textContent = `${timestamp} - ${transcript}`;
-
-                // Create "Play" button for this transcript
-                let playButton = document.createElement('button');
-                playButton.textContent = 'Play';
-                playButton.onclick = function() {
-                    let blob = new Blob(chunks, {'type': 'audio/ogg; codecs=opus'});
-                    let audioURL = URL.createObjectURL(blob);
-                    let audio = new Audio(audioURL);
-                    audio.play();
+                let link = document.createElement('a');
+                link.href = '#';
+                link.textContent = `${timestamp} - ${transcript}`;
+                link.onclick = function() {
+                    // Convert timestamp to seconds and set as current time for audio element
+                    let [minutes, seconds] = timestamp.split(':');
+                    audioElement.currentTime = minutes * 60 + Number(seconds);
+                    audioElement.play();
                 };
-
-                // Create "Pause" button for this transcript
-                let pauseButton = document.createElement('button');
-                pauseButton.textContent = 'Pause';
-                pauseButton.onclick = function() {
-                    let blob = new Blob(chunks, {'type': 'audio/ogg; codecs=opus'});
-                    let audioURL = URL.createObjectURL(blob);
-                    let audio = new Audio(audioURL);
-                    audio.pause();
-                };
-
-                listItem.appendChild(playButton);
-                listItem.appendChild(pauseButton);
+                listItem.appendChild(link);
                 transcriptList.appendChild(listItem);
             }
         }
@@ -90,22 +71,14 @@ function setupSpeechRecognition() {
             voiceStatus.textContent = 'Undetected';
             voiceStatus.style.color = 'red';
             startTimer();
-
-            // Stop recording when no voice is detected
-            mediaRecorder.stop();
         }, 2000);
-
-        // Start recording when voice is detected
-        if (mediaRecorder.state === 'inactive') {
-            chunks = [];  // Clear the old recorded chunks
-            mediaRecorder.start();
-        }
     }
 
-     // Restart the service when it ends
+    // Restart the service when it ends
     recognition.onend = function() {
+        isListening = false; // Set isListening to false when the service ends
         // Check if the stopListening function was called, if not restart the service
-        if(!stopRequested) {
+        if(!stopRequested && !isListening) { // Check if the service is not already running
             recognition.start();
         }
     }
@@ -132,7 +105,6 @@ function startTimer() {
         }
     }, 1000);
 }
-
 // Function to start the global timer
 function startGlobalTimer() {
     globalTimer = 0;
@@ -157,9 +129,22 @@ function startListening() {
     // Reset stopRequested flag
     stopRequested = false;
     setupSpeechRecognition();
-    recognition.start();
+    if(!isListening) { // Check if the service is not already running
+        recognition.start();
+    }
     startTimer();
     startGlobalTimer();  // Start the global timer
+
+    // Start recording
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(function(stream) {
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
+
+            mediaRecorder.ondataavailable = function(e) {
+                recordedChunks.push(e.data);
+            };
+        });
 }
 
 // Function to stop listening to the microphone
@@ -171,10 +156,28 @@ function stopListening() {
     clearInterval(intervalId); // Clear the timer interval
     stopGlobalTimer();  // Stop the global timer
 
-    // Stop recording when the user presses the "Stop" button
-    if (mediaRecorder.state === 'recording') {
-        mediaRecorder.stop();
-    }
+    // Stop recording
+    mediaRecorder.stop();
+
+    // Process the recorded audio data into an ogg file with opus codec
+    mediaRecorder.onstop = function(e) {
+        const blob = new Blob(recordedChunks, {
+            'type' : 'audio/ogg; codecs=opus'
+        });
+        recordedChunks = [];
+        let audioURL = window.URL.createObjectURL(blob);
+
+        // Create a new audio element and set the source to the processed audio
+        audioElement = new Audio(audioURL);
+
+        // Add the audio element to the UI
+        let audioListItem = document.createElement('li');
+        let audioPlayer = document.createElement('audio');
+        audioPlayer.controls = true;
+        audioPlayer.src = audioURL;
+        audioListItem.appendChild(audioPlayer);
+        transcriptList.appendChild(audioListItem);
+    };
 }
 
 // Get the Start and Stop buttons

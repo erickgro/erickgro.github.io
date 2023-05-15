@@ -7,7 +7,7 @@ body {
 }
 #global-timer{
    font-size: 24px;
-   margin-bottom: 80px;
+   margin-bottom: 0px;
 }
 #voice-status {
     color: red;
