@@ -48,15 +48,20 @@ function setupSpeechRecognition() {
                 // Add transcript to the list
                 let listItem = document.createElement('li');
                 let link = document.createElement('a');
+                let transcriptText = document.createElement('span'); // Create a new span element for the transcript
+
                 link.href = '#';
-                link.textContent = `${timestamp} - ${transcript}`;
+                link.textContent = timestamp; // Only put the timestamp inside the anchor
                 link.onclick = function() {
                     // Convert timestamp to seconds and set as current time for audio element
                     let [minutes, seconds] = timestamp.split(':');
                     audioElement.currentTime = minutes * 60 + Number(seconds);
                     audioElement.play();
                 };
+                transcriptText.textContent = ` - ${transcript}`; // Add the transcript to the span
+
                 listItem.appendChild(link);
+                listItem.appendChild(transcriptText); // Append the transcript span to the list item
                 transcriptList.appendChild(listItem);
             }
         }
