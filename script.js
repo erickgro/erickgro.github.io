@@ -7,6 +7,7 @@ let intervalId = null;
 let globalIntervalId = null;
 let stopRequested = false;
 let isListening = false;
+let voiceRecognitionStart = 0;  // Variable to hold the start time of a voice recognition fragment
 const voiceStatus = document.getElementById('voice-status');
 const timerDisplay = document.getElementById('timer');
 const transcriptList = document.getElementById('transcript-list');
@@ -31,13 +32,18 @@ function setupSpeechRecognition() {
 
     recognition.onresult = function(event) {
         for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (VoiceRecognized === false) {
+                voiceRecognitionStart = globalTimer;
+                VoiceRecognized = true;
+            }
+
             // Only add final results to the list
             if (event.results[i].isFinal) {
                 // Get transcript
                 let transcript = event.results[i][0].transcript;
 
                 // Add timestamp to the transcript
-                let timestamp = new Date(globalTimer * 1000).toISOString().substr(14, 5);
+                let timestamp = new Date(voiceRecognitionStart * 1000).toISOString().substr(14, 5);
 
                 // Add transcript to the list
                 let listItem = document.createElement('li');
@@ -56,7 +62,6 @@ function setupSpeechRecognition() {
         }
 
         // Set VoiceRecognized to true when human voice is detected
-        VoiceRecognized = true;
         voiceStatus.textContent = 'Voice detected';
         voiceStatus.style.color = 'green';
 
@@ -135,6 +140,17 @@ function startListening() {
     }
     startTimer();
     startGlobalTimer();  // Start the global timer
+
+    // Start recording
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(function(stream) {
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
+
+            mediaRecorder.ondataavailable = function(e) {
+                recordedChunks.push(e.data);
+            };
+        });
 }
 
 // Function to stop listening to the microphone
@@ -145,23 +161,8 @@ function stopListening() {
     clearTimeout(timeoutId);
     clearInterval(intervalId); // Clear the timer interval
     stopGlobalTimer();  // Stop the global timer
-}
 
-// Function to setup recording
-function setupRecording() {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(function(stream) {
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.start();
-
-        mediaRecorder.ondataavailable = function(e) {
-            recordedChunks.push(e.data);
-        };
-    });
-}
-
-// Function to stop recording
-function stopRecording() {
+    // Stop recording
     mediaRecorder.stop();
 
     // Process the recorded audio data into an ogg file with opus codec
@@ -190,12 +191,5 @@ const startButton = document.getElementById('start-button');
 const stopButton = document.getElementById('stop-button');
 
 // Set up button event listeners
-startButton.addEventListener('click', function() {
-    startListening();
-    setupRecording(); // Start recording immediately when the button is clicked
-});
-
-stopButton.addEventListener('click', function() {
-    stopListening();
-    stopRecording(); // Stop recording immediately when the button is clicked
-});
+startButton.addEventListener('click', startListening);
+stopButton.addEventListener('click', stopListening);
