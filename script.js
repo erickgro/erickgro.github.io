@@ -168,6 +168,11 @@ function stopListening() {
         recordedChunks = [];
         let audioURL = window.URL.createObjectURL(blob);
 
+        // Create a new audio element if one doesn't exist yet
+        if (!audioElement) {
+            audioElement = new Audio();
+        }
+
         // Update the source of the audio element
         audioElement.src = audioURL;
 
