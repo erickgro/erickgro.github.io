@@ -171,6 +171,7 @@ function stopListening() {
         // Create a new audio element if one doesn't exist yet
         if (!audioElement) {
             audioElement = new Audio();
+            audioElement.controls = true;
         }
 
         // Update the source of the audio element
@@ -178,10 +179,7 @@ function stopListening() {
 
         // Add the audio element to the UI
         let audioListItem = document.createElement('li');
-        let audioPlayer = document.createElement('audio');
-        audioPlayer.controls = true;
-        audioPlayer.src = audioURL;
-        audioListItem.appendChild(audioPlayer);
+        audioListItem.appendChild(audioElement);
         transcriptList.appendChild(audioListItem);
 
         // Add hyperlinks to the timestamps
@@ -196,6 +194,7 @@ function stopListening() {
                 let [minutes, seconds] = timestamp.split(':');
                 audioElement.currentTime = minutes * 60 + Number(seconds);
                 audioElement.play();
+                return false; // Prevent the default action
             };
             listItem.innerHTML = ''; // Clear the list item content
             listItem.appendChild(link);
