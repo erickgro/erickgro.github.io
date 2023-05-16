@@ -34,3 +34,6 @@ button {
     max-height: 200px;
     overflow-y: auto;
 }
+.fixed-width-audio {
+    width: 300px;  /* Adjust this value to your needs */
+}
