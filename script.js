@@ -53,6 +53,24 @@ function setupSpeechRecognition() {
                 let listItem = document.createElement('li');
                 listItem.textContent = `${timestamp} - ${transcript}`;
                 transcriptList.appendChild(listItem);
+
+                // Create "Copy" button
+                let copyButton = document.createElement('button');
+                copyButton.textContent = 'Copy';
+                copyButton.className = 'copy-button';
+                copyButton.addEventListener('click', function() {
+                    // Create a textarea to hold the text to copy
+                    let textarea = document.createElement('textarea');
+                    textarea.textContent = `${timestamp} - ${transcript}`;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                });
+
+                // Add "Copy" button to the list item
+                listItem.appendChild(copyButton);
+            
             }
         }
 
@@ -72,6 +90,23 @@ function setupSpeechRecognition() {
             voiceStatus.style.color = 'red';
             startTimer();
         }, 2000);
+
+        if (transcripts.length === 1) {
+            // Enable the "Copy all" button when the first transcription is added
+            document.getElementById('copy-all-button').disabled = false;
+        }
+        // Set up the "Copy all" button
+        document.getElementById('copy-all-button').addEventListener('click', function() {
+            let allTranscriptions = transcripts.map(t => `${t.timestamp} - ${t.transcript}`).join('\n');
+            navigator.clipboard.writeText(allTranscriptions)
+                .then(function() {
+                    /* clipboard successfully set */
+                    console.log('Clipboard successfully set');
+                }, function() {
+                    /* clipboard write failed */
+                    console.log('Clipboard write failed');
+                });
+        });
     }
 
     // Restart the service when it ends
@@ -183,9 +218,10 @@ function stopListening() {
         transcriptList.appendChild(audioListItem);
 
         // Add hyperlinks to the timestamps
-        for (let i = 0; i < transcriptList.children.length - 1; i++) { // -1 to exclude the audio player item
+        for (let i = 0; i < transcriptList.children.length; i++) { 
             let listItem = transcriptList.children[i];
             let timestamp = transcripts[i].timestamp;
+
             let link = document.createElement('a');
             link.href = '#';
             link.textContent = timestamp;
@@ -196,9 +232,19 @@ function stopListening() {
                 audioElement.play();
                 return false; // Prevent the default action
             };
-            listItem.innerHTML = ''; // Clear the list item content
+
+            let transcriptText = document.createTextNode(` - ${transcripts[i].transcript}`); 
+
+            // Re-append the Copy button
+            let copyButton = listItem.querySelector('.copy-button');
+
+            // Clear the list item content
+            listItem.innerHTML = '';
+
+            // Append the new elements
             listItem.appendChild(link);
-            listItem.appendChild(document.createTextNode(` - ${transcripts[i].transcript}`)); // Append the transcript to the list item
+            listItem.appendChild(transcriptText);
+            listItem.appendChild(copyButton);
         }
     };
 }
