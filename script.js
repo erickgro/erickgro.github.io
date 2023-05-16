@@ -195,8 +195,9 @@ function stopListening() {
     stopGlobalTimer();  // Stop the global timer
 
     // Stop accessing the microphone
-    if (mediaStream) {
-        mediaStream.getTracks().forEach(track => track.stop());
+    if (mediaRecorder.stream) {
+        let tracks = mediaRecorder.stream.getTracks();
+        tracks.forEach(track => track.stop());
     }
 
     // Stop recording
@@ -220,9 +221,8 @@ function stopListening() {
         audioElement.src = audioURL;
 
         // Add the audio element to the UI
-        let audioListItem = document.createElement('li');
-        audioListItem.appendChild(audioElement);
-        transcriptList.appendChild(audioListItem);
+        let audioControlBar = document.getElementById('audio-control-bar');
+        audioControlBar.appendChild(audioElement);
 
         // Add hyperlinks to the timestamps
         for (let i = 0; i < transcriptList.children.length - 1; i++) { // -1 to exclude the audio player item
@@ -238,19 +238,9 @@ function stopListening() {
                 audioElement.play();
                 return false; // Prevent the default action
             };
-
-            let transcriptText = document.createTextNode(` - ${transcripts[i].transcript}`); 
-
-            // Re-append the Copy button
-            let copyButton = listItem.querySelector('.copy-button');
-
-            // Clear the list item content
-            listItem.innerHTML = '';
-
-            // Append the new elements
+            listItem.innerHTML = ''; // Clear the list item content
             listItem.appendChild(link);
-            listItem.appendChild(transcriptText);
-            listItem.appendChild(copyButton);
+            listItem.appendChild(document.createTextNode(` - ${transcripts[i].transcript}`)); // Append the transcript to the list item
         }
     };
 }
