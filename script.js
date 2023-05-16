@@ -1,4 +1,5 @@
 // Initialize variables and get UI elements
+let mediaStream;
 let VoiceRecognized = false;
 let timer = 0;
 let globalTimer = 0;
@@ -174,6 +175,7 @@ function startListening() {
     // Start recording
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(function(stream) {
+            mediaStream = stream;  // Save the stream to the global variable
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
 
@@ -191,6 +193,11 @@ function stopListening() {
     clearTimeout(timeoutId);
     clearInterval(intervalId); // Clear the timer interval
     stopGlobalTimer();  // Stop the global timer
+
+    // Stop accessing the microphone
+    if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+    }
 
     // Stop recording
     mediaRecorder.stop();
@@ -218,10 +225,9 @@ function stopListening() {
         transcriptList.appendChild(audioListItem);
 
         // Add hyperlinks to the timestamps
-        for (let i = 0; i < transcriptList.children.length; i++) { 
+        for (let i = 0; i < transcriptList.children.length - 1; i++) { // -1 to exclude the audio player item
             let listItem = transcriptList.children[i];
             let timestamp = transcripts[i].timestamp;
-
             let link = document.createElement('a');
             link.href = '#';
             link.textContent = timestamp;
