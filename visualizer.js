@@ -14,7 +14,7 @@ dataArray = new Uint8Array(bufferLength);
 visualizerCanvas = document.createElement('canvas');
 visualizerCanvas.width = 500;
 visualizerCanvas.height = 500;
-visualizerCanvas.style.border = '1px solid red';
+visualizerCanvas.style.border = '1px solid blue';
 
 document.body.appendChild(visualizerCanvas);
 visualizerCanvas.style.display = 'none';
@@ -45,12 +45,12 @@ function visualize() {
 
     visualizerContext.beginPath();
 
-    for (let i = 0; i < bufferLength; i++) {
+    for (let i = 0; i < bufferLength / 2; i++) {
         // Calculate the length of the segment
         let barLength = Math.log(1 + dataArray[i]) * 10;  // The factor of 10 can be adjusted as needed
 
         // Calculate the angle for this segment
-        let angle = i * barWidth;
+        let angle = i * barWidth * 2;
 
         // Calculate the x and y coordinates for this segment
         let x = centerX + (baseRadius + barLength) * Math.cos(angle);
