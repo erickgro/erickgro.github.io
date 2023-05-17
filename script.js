@@ -1,7 +1,7 @@
+import { startVisualizer, stopVisualizer } from './visualizer.js';
 document.addEventListener('DOMContentLoaded', (event) => {
 
-    // Initialize variables and get UI elements
-    import { startVisualizer, stopVisualizer } from './visualizer.js';
+    // Initialize variables and get UI elements    
     let mediaStream;
     let VoiceRecognized = false;
     let timer = 0;
