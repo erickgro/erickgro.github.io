@@ -1,4 +1,5 @@
 import { startVisualizer, stopVisualizer } from './visualizer.js';
+
 document.addEventListener('DOMContentLoaded', (event) => {
 
     // Initialize variables and get UI elements    
@@ -220,8 +221,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const startButton = document.getElementById('start-button');
     const stopButton = document.getElementById('stop-button');
 
-    startButton.addEventListener('click', startListening);
-    stopButton.addEventListener('click', stopListening);
+    // Make stopButton invisible by default
+    stopButton.style.display = 'none';
+
+    startButton.addEventListener('click', function() {
+        // Start the listening and hide startButton
+        startListening();
+        this.style.display = 'none';
+
+        // Show stopButton
+        stopButton.style.display = 'block';
+    });
+
+    stopButton.addEventListener('click', function() {
+        // Stop the listening and hide stopButton
+        stopListening();
+        this.style.display = 'none';
+
+        // Show startButton
+        startButton.style.display = 'block';
+    });
 
     document.getElementById('copy-all').addEventListener('click', function() {
         let allTranscriptions = transcripts.map(t => `${t.timestamp} - ${t.transcript}`).join('\n');
