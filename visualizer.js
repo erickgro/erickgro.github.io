@@ -38,15 +38,13 @@ function visualize() {
     // Calculate the center and radius of the circle
     let centerX = visualizerCanvas.width / 2;
     let centerY = visualizerCanvas.height / 2;
-    let radius = 200;  // Adjust as needed
 
-    // Use only the first N values
-    let N = 64;  // Adjust as needed
-    let barWidth = (2 * Math.PI) / N;
+    // Calculate the width of each segment of the circle
+    let barWidth = (2 * Math.PI) / bufferLength;
 
-    for (let i = 0; i < N; i++) {
+    for (let i = 0; i < bufferLength; i++) {
         // Calculate the length of the segment
-        let barLength = dataArray[i] / 2;  // Adjust as needed
+        let barLength = Math.log(1 + dataArray[i]) * 10;  // The factor of 10 can be adjusted as needed
 
         // Calculate the start and end angles for this segment
         let startAngle = i * barWidth;
