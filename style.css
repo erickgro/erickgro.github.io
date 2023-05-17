@@ -1,122 +1,106 @@
 body {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-height: 100vh;
-background-color: #000000; /* Dark Background /
-color: #FFFFFF; / Light Text */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
 }
 
 #global-timer{
-font-size: 24px;
-margin-bottom: 0px;
-color: #FFFFFF; /* Light Text */
+    font-size: 24px;
+    margin-bottom: 0px;
 }
 
 #voice-status {
-color: #FF3B30; /* System Red */
-font-size: 24px;
-margin-bottom: 20px;
+    color: red;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
 #timer {
-font-size: 20px;
-margin-bottom: 20px;
-color: #FFFFFF; /* Light Text */
+    font-size: 20px;
+    margin-bottom: 20px;
 }
 
 button {
-padding: 10px 20px;
-margin-bottom: 10px;
-font-size: 20px;
-cursor: pointer;
-background-color: #007AFF; /* System Blue /
-color: #FFFFFF; / Light Text */
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 #transcript-list {
-list-style: none;
-padding: 0; /* Remove left padding /
-font-size: 18px;
-max-height: 600px; / Increase height /
-width: 600px; / Add width /
-overflow-y: auto;
-border: 1px solid gray; / Add border /
-padding: 10px; / Add internal padding /
-box-sizing: border-box; / Border and padding are included in width and height /
-background-color: #1C1C1E; / Dark Gray 2 /
-color: #FFFFFF; / Light Text */
+    list-style: none;
+    padding: 0;   /* Remove left padding */
+    font-size: 18px;
+    max-height: 600px;  /* Increase height */
+    width: 600px;  /* Add width */
+    overflow-y: auto;
+    border: 1px solid gray;  /* Add border */
+    padding: 10px;  /* Add internal padding */
+    box-sizing: border-box;  /* Border and padding are included in width and height */
 }
 
 #transcript-list li {
-background-color: #2C2C2E; /* Dark Gray 3 /
-border: 1px solid #48484A; / Dark Gray 4 /
-border-radius: 2px; / Add corner radius /
-padding: 10px; / Add internal padding /
-margin-bottom: 10px; / Add bottom margin /
-position: relative; / Add this line /
-color: #FFFFFF; / Light Text */
+    background-color: white;  /* Set background color to white */
+    border: 1px solid gray;  /* Add border */
+    border-radius: 2px;  /* Add corner radius */
+    padding: 10px;  /* Add internal padding */
+    margin-bottom: 10px;  /* Add bottom margin */
+    position: relative;  /* Add this line */
 }
 
 .copy-button {
-position: absolute;
-right: 10px;
-top: 50%;
-transform: translateY(-50%);
-display: none;
-color: #FFFFFF; /* Light Text */
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
 }
 
 #transcript-list li:hover .copy-button {
-display: block;
+    display: block;
 }
 
 #transcript-list-container {
-height: 600px; /* Adjust this value to your needs /
-overflow: auto;
-background-color: #1C1C1E; / Dark Gray 2 */
+    height: 600px;  /* Adjust this value to your needs */
+    overflow: auto;
 }
 
 #transcript-list-header {
-display: flex;
-justify-content: space-between;
-align-items: center;
-position: sticky;
-top: 0;
-background-color: #2C2C2E; /* Dark Gray 3 /
-z-index: 1;
-padding: 10px;
-border-bottom: 1px solid #48484A; / Dark Gray 4 /
-color: #FFFFFF; / Light Text */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background-color: white;  /* Set background color to white */
+    z-index: 1;
+    padding: 10px;
+    border-bottom: 1px solid gray;
 }
 
 #transcript-list-header h1 {
-margin: 0;
-color: #FFFFFF; /* Light Text */
+    margin: 0;
 }
 
 #transcript-list-header button {
-cursor: pointer; /* Change cursor to pointer when hoveringover the button /
-background-color: #007AFF; / System Blue /
-color: #FFFFFF; / Light Text */
+    cursor: pointer;  /* Change cursor to pointer when hovering over the button */
 }
 
 #audio-control-bar {
-position: fixed;
-bottom: 0;
-left: 0;
-right: 0;
-background: #1C1C1E; /* Dark Gray 2 /
-padding: 10px;
-display: flex;
-justify-content: center;
-align-items: center;
-border-top: 1px solid #48484A; / Dark Gray 4 /
-color: #FFFFFF; / Light Text */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #eee;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #ccc;
 }
 
 audio {
-width: 100%;
-max-width: 600px;
+    width: 100%;
+    max-width: 600px;
 }
