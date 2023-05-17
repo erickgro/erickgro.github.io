@@ -49,25 +49,24 @@ function visualize() {
         // Calculate the length of the segment
         let barLength = Math.log(1 + dataArray[i]) * 10;  // The factor of 10 can be adjusted as needed
 
-        // Calculate the start and end angles for this segment
-        let startAngle = i * barWidth;
-        let endAngle = (i + 1) * barWidth;
+        // Calculate the angle for this segment
+        let angle = i * barWidth;
 
-        // Calculate the start and end points of the segment
-        let startX = centerX + baseRadius * Math.cos(startAngle);
-        let startY = centerY + baseRadius * Math.sin(startAngle);
-        let endX = centerX + (baseRadius + barLength) * Math.cos(startAngle);
-        let endY = centerY + (baseRadius + barLength) * Math.sin(startAngle);
+        // Calculate the x and y coordinates for this segment
+        let x = centerX + (baseRadius + barLength) * Math.cos(angle);
+        let y = centerY + (baseRadius + barLength) * Math.sin(angle);
 
         // Draw the segment
-        visualizerContext.moveTo(startX, startY);
-        visualizerContext.lineTo(endX, endY);
+        if (i === 0) {
+            visualizerContext.moveTo(x, y);
+        } else {
+            visualizerContext.lineTo(x, y);
+        }
     }
 
     visualizerContext.closePath();
     visualizerContext.stroke();
 }
-
 
 function stopVisualizer() {
     source.disconnect();
