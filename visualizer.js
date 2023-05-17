@@ -40,10 +40,11 @@ function visualize() {
     let centerY = visualizerCanvas.height / 2;
     let radius = 200;  // Adjust as needed
 
-    // Calculate the width of each segment of the circle
-    let barWidth = (2 * Math.PI) / bufferLength;
+    // Use only the first N values
+    let N = 64;  // Adjust as needed
+    let barWidth = (2 * Math.PI) / N;
 
-    for (let i = 0; i < bufferLength; i++) {
+    for (let i = 0; i < N; i++) {
         // Calculate the length of the segment
         let barLength = dataArray[i] / 2;  // Adjust as needed
 
