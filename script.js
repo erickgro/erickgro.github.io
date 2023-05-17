@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', (event) => {
 
     // Initialize variables and get UI elements
+    import { startVisualizer, stopVisualizer } from './visualizer.js';
     let mediaStream;
     let VoiceRecognized = false;
     let timer = 0;
@@ -167,6 +168,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 mediaStream = stream;
                 mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.start();
+                startVisualizer(mediaStream);  // Add this line
 
                 mediaRecorder.ondataavailable = function(e) {
                     recordedChunks.push(e.data);
@@ -180,6 +182,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         clearTimeout(timeoutId);
         clearInterval(intervalId);
         stopGlobalTimer();
+        stopVisualizer();  // Add this line
 
         if (mediaRecorder.stream) {
             let tracks = mediaRecorder.stream.getTracks();
