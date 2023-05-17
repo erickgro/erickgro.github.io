@@ -31,17 +31,32 @@ function startVisualizer(stream) {
 function visualize() {
     visualizerAnimationId = requestAnimationFrame(visualize);
     analyser.getByteFrequencyData(dataArray);
-    
+
     // Clear the canvas
     visualizerContext.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
-    
-    // Draw the frequency data
-    for(let i = 0; i < bufferLength; i++) {
-        // Calculate the height of the bar for this frequency
-        let barHeight = dataArray[i] / 2;  // Divide by 2 to fit the canvas height
-        
-        // Draw the bar
-        visualizerContext.fillRect(i * 4, visualizerCanvas.height - barHeight, 2, barHeight);
+
+    // Calculate the center and radius of the circle
+    let centerX = visualizerCanvas.width / 2;
+    let centerY = visualizerCanvas.height / 2;
+    let radius = 200;  // Adjust as needed
+
+    // Calculate the width of each segment of the circle
+    let barWidth = (2 * Math.PI) / bufferLength;
+
+    for (let i = 0; i < bufferLength; i++) {
+        // Calculate the length of the segment
+        let barLength = dataArray[i] / 2;  // Adjust as needed
+
+        // Calculate the start and end angles for this segment
+        let startAngle = i * barWidth;
+        let endAngle = (i + 1) * barWidth;
+
+        // Draw the segment
+        visualizerContext.beginPath();
+        visualizerContext.moveTo(centerX, centerY);
+        visualizerContext.arc(centerX, centerY, barLength, startAngle, endAngle);
+        visualizerContext.lineTo(centerX, centerY);
+        visualizerContext.stroke();
     }
 }
 
