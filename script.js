@@ -204,6 +204,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
             let audioControlBar = document.getElementById('audio-control-bar');
             audioControlBar.appendChild(audioElement);
+
+            // Create download button
+            let downloadButton = document.createElement('a');
+            downloadButton.innerHTML = "Download";
+            downloadButton.href = audioURL;
+            downloadButton.download = 'audio.ogg';
+            audioControlBar.appendChild(downloadButton);
         };
     }
 
