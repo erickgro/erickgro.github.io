@@ -14,7 +14,7 @@ dataArray = new Uint8Array(bufferLength);
 visualizerCanvas = document.createElement('canvas');
 visualizerCanvas.width = 500;
 visualizerCanvas.height = 500;
-visualizerCanvas.style.border = '1px solid blue';
+visualizerCanvas.style.border = '1px solid red';
 
 document.body.appendChild(visualizerCanvas);
 visualizerCanvas.style.display = 'none';
@@ -32,8 +32,10 @@ function visualize() {
     visualizerAnimationId = requestAnimationFrame(visualize);
     analyser.getByteFrequencyData(dataArray);
 
-    // Clear the canvas
-    visualizerContext.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+    // Overlay a semi-transparent rectangle to gradually fade out the older drawings
+    visualizerContext.fillStyle = 'rgba(255, 255, 255, 0.1)';  // Adjust the alpha value (0.1) as needed
+    visualizerContext.fillRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+    visualizerContext.fillStyle = 'black';
 
     // Calculate the center and radius of the circle
     let centerX = visualizerCanvas.width / 2;
@@ -67,6 +69,7 @@ function visualize() {
     visualizerContext.closePath();
     visualizerContext.stroke();
 }
+
 
 function stopVisualizer() {
     source.disconnect();
