@@ -38,9 +38,12 @@ function visualize() {
     // Calculate the center and radius of the circle
     let centerX = visualizerCanvas.width / 2;
     let centerY = visualizerCanvas.height / 2;
+    let baseRadius = 200;  // Adjust as needed
 
     // Calculate the width of each segment of the circle
     let barWidth = (2 * Math.PI) / bufferLength;
+
+    visualizerContext.beginPath();
 
     for (let i = 0; i < bufferLength; i++) {
         // Calculate the length of the segment
@@ -50,14 +53,21 @@ function visualize() {
         let startAngle = i * barWidth;
         let endAngle = (i + 1) * barWidth;
 
+        // Calculate the start and end points of the segment
+        let startX = centerX + baseRadius * Math.cos(startAngle);
+        let startY = centerY + baseRadius * Math.sin(startAngle);
+        let endX = centerX + (baseRadius + barLength) * Math.cos(startAngle);
+        let endY = centerY + (baseRadius + barLength) * Math.sin(startAngle);
+
         // Draw the segment
-        visualizerContext.beginPath();
-        visualizerContext.moveTo(centerX, centerY);
-        visualizerContext.arc(centerX, centerY, barLength, startAngle, endAngle);
-        visualizerContext.lineTo(centerX, centerY);
-        visualizerContext.stroke();
+        visualizerContext.moveTo(startX, startY);
+        visualizerContext.lineTo(endX, endY);
     }
+
+    visualizerContext.closePath();
+    visualizerContext.stroke();
 }
+
 
 function stopVisualizer() {
     source.disconnect();
