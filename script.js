@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     link.onclick = function() {
                         let [minutes, seconds] = timestamp.split(':');
                         // Convert minutes and seconds to seconds, and subtract 2 seconds before setting the audio time
-                        audioElement.currentTime = minutes * 60 + Number(seconds) - 2;
+                        audioElement.currentTime = minutes * 60 + Number(seconds);
                         audioElement.play();
                         return false; 
                     };
