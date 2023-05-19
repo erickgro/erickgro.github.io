@@ -1,4 +1,4 @@
-import { startVisualizer, stopVisualizer } from './visualizer.js';
+// import { startVisualizer, stopVisualizer } from './visualizer.js';
 
 document.addEventListener('DOMContentLoaded', (event) => {
 
@@ -44,29 +44,45 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 if (event.results[i].isFinal) {
                     let transcript = event.results[i][0].transcript;
 
-                    let timestamp = new Date(voiceRecognitionStart * 1000).toISOString().substr(14, 5);
+                    // Subtract 2 seconds from the voiceRecognitionStart time before creating the timestamp
+                    let timestamp = new Date((voiceRecognitionStart - 2) * 1000).toISOString().substr(14, 5);
 
                     transcripts.push({timestamp: timestamp, transcript: transcript});
 
                     let listItem = document.createElement('li');
+
                     let link = document.createElement('a');
                     link.href = '#';
-                    link.textContent = timestamp;
+
+                    let timestampElement = document.createElement('span');
+                    timestampElement.className = 'timestamp';  // Add class to the timestamp
+                    timestampElement.textContent = timestamp;
+
+                    link.appendChild(timestampElement);
+
                     link.onclick = function() {
                         let [minutes, seconds] = timestamp.split(':');
-                        audioElement.currentTime = minutes * 60 + Number(seconds);
+                        // Convert minutes and seconds to seconds, and subtract 2 seconds before setting the audio time
+                        audioElement.currentTime = minutes * 60 + Number(seconds) - 2;
                         audioElement.play();
                         return false; 
                     };
+
                     listItem.appendChild(link);
-                    listItem.appendChild(document.createTextNode(` - ${transcript}`));
+
+                    let transcriptElement = document.createElement('span');
+                    transcriptElement.className = 'transcript';
+                    transcriptElement.textContent = `${transcript}`;
+                    
+                    listItem.appendChild(document.createElement('br'));
+                    listItem.appendChild(transcriptElement);
 
                     let copyButton = document.createElement('button');
                     copyButton.textContent = 'Copy';
                     copyButton.className = 'copy-button';
                     copyButton.addEventListener('click', function() {
                         let textarea = document.createElement('textarea');
-                        textarea.textContent = `${timestamp} - ${transcript}`;
+                        textarea.textContent = `${timestamp}\n${transcript}`;
                         document.body.appendChild(textarea);
                         textarea.select();
                         document.execCommand('copy');
@@ -169,7 +185,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 mediaStream = stream;
                 mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.start();
-                startVisualizer(mediaStream);  // Add this line
+                //startVisualizer(mediaStream);  // START VISUALIZER
 
                 mediaRecorder.ondataavailable = function(e) {
                     recordedChunks.push(e.data);
@@ -183,7 +199,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         clearTimeout(timeoutId);
         clearInterval(intervalId);
         stopGlobalTimer();
-        stopVisualizer();  // Add this line
+        //stopVisualizer();  // STOP VISUALIZER
 
         if (mediaRecorder.stream) {
             let tracks = mediaRecorder.stream.getTracks();

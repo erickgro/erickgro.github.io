@@ -29,25 +29,35 @@ button {
     cursor: pointer;
 }
 
+#transcript-container{
+    background-color: blueviolet;
+}
+
 #transcript-list {
     list-style: none;
-    padding: 0;   /* Remove left padding */
+    padding: 0;   
     font-size: 18px;
-    max-height: 600px;  /* Increase height */
-    width: 600px;  /* Add width */
+    max-height: 600px;  
+    width: 600px;  
     overflow-y: auto;
-    border: 1px solid gray;  /* Add border */
+    border: 1px solid gray;  
     padding: 10px;  /* Add internal padding */
     box-sizing: border-box;  /* Border and padding are included in width and height */
 }
 
 #transcript-list li {
-    background-color: white;  /* Set background color to white */
-    border: 1px solid gray;  /* Add border */
-    border-radius: 2px;  /* Add corner radius */
-    padding: 10px;  /* Add internal padding */
-    margin-bottom: 10px;  /* Add bottom margin */
-    position: relative;  /* Add this line */
+    background-color: #000000;  
+    border: 1px solid gray; 
+    border-radius: 2px; 
+    padding: 10px; 
+    margin-bottom: 10px;  
+    position: relative; 
+    padding-right: 50px; /* additional padding to reserve space for the button */
+}
+
+#transcript-list li:hover {
+    background-color: #2C2C2E;
+
 }
 
 .copy-button {
@@ -59,12 +69,15 @@ button {
 }
 
 #transcript-list li:hover .copy-button {
+    background-color: #66D4CF;
+;
     display: block;
 }
 
 #transcript-list-container {
-    height: 600px;  /* Adjust this value to your needs */
+    height: 600px;
     overflow: auto;
+    background-color: blue;
 }
 
 #transcript-list-header {
@@ -73,7 +86,6 @@ button {
     align-items: center;
     position: sticky;
     top: 0;
-    background-color: white;  /* Set background color to white */
     z-index: 1;
     padding: 10px;
     border-bottom: 1px solid gray;
@@ -84,7 +96,7 @@ button {
 }
 
 #transcript-list-header button {
-    cursor: pointer;  /* Change cursor to pointer when hovering over the button */
+    cursor: pointer;
 }
 
 #audio-control-bar {
@@ -103,4 +115,28 @@ button {
 audio {
     width: 100%;
     max-width: 600px;
+    background-color: #95B9C7;
+}
+
+audio::-webkit-media-controls-play-button{
+background-color:green;}
+
+.timestamp {
+    color: #66D4CF;
+    transition: color 250ms ease-in;
+}
+
+.timestamp:hover {
+    color: #ff00ff;  /* change to your preferred hover color */
+}
+
+.transcript {
+    color: #ffffff;
+    transition: color 250ms ease-in;
+    overflow-wrap: break-word;  /* breaks the line at the limit of the container width */
+    word-break: break-word;  /* breaks unbreakable words */
+}
+
+.transcript:hover {
+    color: #cccccc;  /* change to your preferred hover color */
 }
