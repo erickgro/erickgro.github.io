@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     let transcript = event.results[i][0].transcript;
 
                     // Subtract 2 seconds from the voiceRecognitionStart time before creating the timestamp
-                    let timestamp = new Date((voiceRecognitionStart - 2) * 1000).toISOString().substr(14, 5);
+                    let timestamp = new Date((voiceRecognitionStart - 1) * 1000).toISOString().substr(14, 5);
 
                     transcripts.push({timestamp: timestamp, transcript: transcript});
 
