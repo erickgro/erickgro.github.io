@@ -1,13 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+:root {
+    --main-color: #DCA9E9;
+    --main-hovered: #D591E5;
+    --main-active: #C47AD7;
+    --secondary-active: #1B0720;
+    --red-color: #FF453A;
+    --background-color: #0D0C0B;
+}
+
+/* Define the properties for the whole page */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--red-color) transparent;
+}
+
+/* Define the properties for Webkit browsers */
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+    border: solid 3px transparent;
+/*    box-shadow: inset 0 0 10px 10px green;*/
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    box-shadow: inset 0 0 10px 10px #98989B;
+    border: solid 3px var(--background-color);
+}
+
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
+    background-color: var(--background-color);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;  
 }
 
 #global-timer{
-    font-size: 24px;
+    font-size: 14px;
     margin-bottom: 0px;
 }
 
@@ -29,114 +73,233 @@ button {
     cursor: pointer;
 }
 
-#transcript-container{
-    background-color: blueviolet;
+#start-button, #stop-button {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: none;
+    color: white;
+    text-align: center;
+    line-height: 100px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    box-shadow: none;
+    user-select: none;
 }
+
+#start-button {
+    background-color: var(--main-color);
+}
+#start-button img {
+    width: 24px;
+    height: 24px;
+}
+
+#start-button:hover {
+    background-color: var(--main-hovered);
+}
+
+#start-button:active{
+    background-color: var(--main-active);
+}
+
+#stop-button {
+    line-height: 0;
+    background-color: var(--red-color);
+}
+
+#stop-button img {
+    width: 24px;
+    height: 24px;
+    transform: translateY(12px);
+    line-height: 0;
+    margin-bottom: 28px;
+}
+
+#stop-button:hover, #stop-button:active {
+    background-color: #FF6B5F;
+}
+
 
 #transcript-list {
     list-style: none;
     padding: 0;   
     font-size: 18px;
-    max-height: 600px;  
     width: 600px;  
-    overflow-y: auto;
-    border: 1px solid gray;  
-    padding: 10px;  /* Add internal padding */
-    box-sizing: border-box;  /* Border and padding are included in width and height */
+    border: 0px solid gray;  
+    padding: 10px;
+    margin-bottom: 40px;
+    box-sizing: border-box;
+    max-height: 1px;
+    transform: translateY(-280px);
 }
 
 #transcript-list li {
-    background-color: #000000;  
-    border: 1px solid gray; 
-    border-radius: 2px; 
-    padding: 10px; 
-    margin-bottom: 10px;  
-    position: relative; 
-    padding-right: 50px; /* additional padding to reserve space for the button */
+    background-color: #0D0C0B;  
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 80px;
+    position: relative;
+    border: 0px solid #2C2C2E;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 28px;
+    color: #F8F8FC;
 }
 
 #transcript-list li:hover {
-    background-color: #2C2C2E;
-
+    background-color: #000000;
+    transition: background-color 250ms ease-in;
 }
 
 .copy-button {
     position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: none;
+    right: 20px;
+    top: 10px;
+    visibility: hidden;
+    opacity: 0;
+    border-radius: 4px;
+    border: 1px solid #000000;
+    background-color: transparent;
+    width: 34px;
+    height: 34px;
+    padding: 8px;
+    margin: 0;
+    margin-top: 8px;
+    animation: fadeIn 250ms ease-in;
+    transition: border 150ms ease-in, visibility 250ms ease-in, opacity 250ms ease-in;
+}
+
+.copy-button img {
+    transform: translateY(-1px);
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.copy-button:hover {
+    border: 1px solid var(--main-color);
+}
+
+.copy-button-pressed {
+    background-color: var(--secondary-active);
 }
 
 #transcript-list li:hover .copy-button {
-    background-color: #66D4CF;
-;
-    display: block;
+    visibility: visible;
+    opacity: 1;
 }
 
-#transcript-list-container {
+/*#transcript-list-container {
     height: 600px;
     overflow: auto;
     background-color: blue;
 }
+*/
 
-#transcript-list-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    padding: 10px;
-    border-bottom: 1px solid gray;
+a:link, a:visited, a:hover, a:active {
+    text-decoration: none;
 }
 
-#transcript-list-header h1 {
+.timestamp {
+    color: var(--main-color);
+    transition: color 250ms ease-in;
+    font-size: 12px;
+    line-height: 0;
     margin: 0;
 }
 
-#transcript-list-header button {
-    cursor: pointer;
-}
-
-#audio-control-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #eee;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-top: 1px solid #ccc;
-}
-
-audio {
-    width: 100%;
-    max-width: 600px;
-    background-color: #95B9C7;
-}
-
-audio::-webkit-media-controls-play-button{
-background-color:green;}
-
-.timestamp {
-    color: #66D4CF;
-    transition: color 250ms ease-in;
-}
-
 .timestamp:hover {
-    color: #ff00ff;  /* change to your preferred hover color */
+    color: #ff00ff;
+}
+.active-timestamp {
+    color: #737375;
+    cursor: not-allowed;
+}
+
+.active-timestamp:hover {
+    color: #737375;
+}
+
+.stopped-timestamp {
+    color: var(--main-color);
+}
+
+.stopped-timestamp:hover {
+    color: #ffffff;
+    transition: color 250ms ease-in;
 }
 
 .transcript {
     color: #ffffff;
     transition: color 250ms ease-in;
-    overflow-wrap: break-word;  /* breaks the line at the limit of the container width */
-    word-break: break-word;  /* breaks unbreakable words */
+    overflow-wrap: break-word; 
+    word-break: break-word;
 }
 
-.transcript:hover {
-    color: #cccccc;  /* change to your preferred hover color */
+#control-bar {
+    position: fixed;
+    height: 160px;
+    width: 560px;
+    top: 0;
+    background: #0D0C0B;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 0px solid #2C2C2E;
+}
+
+#stop-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+#control-bar #copy-all {
+    align-self: center;
+}
+
+#control-bar #stop-button {
+    align-self: center;
+}
+
+#copy-all{
+    background-color: var(--main-color);
+    border-radius: 4px;
+    border: 0;
+    height: 40px;
+    padding: 0 16px; /* top-bottom left-right */
+    margin: 0;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+#copy-all:hover{
+    background-color: var(--main-hovered);
+}
+
+#copy-all:active{
+    background-color: var(--main-active);
+}
+
+#control-bar audio {
+    position: relative;
+    left: 0px;
+    width: 100%;
+    max-width: 445px;
+    filter: invert(100%);
+}
+
+audio::-webkit-media-controls-volume-control-container {
+    display: none;
 }

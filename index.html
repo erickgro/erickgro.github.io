@@ -4,20 +4,22 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="global-timer">0</div>
-    <div id="voice-status"></div>
-    <div id="timer">0</div>
-    <button id="start-button">Start</button>
-    <button id="stop-button">Stop</button>
-    <div id="transcript-container">
-        <div id="transcript-list-header">
-            <h2>time -2wwww</h2>
-            <button id="copy-all" disabled>Copy all</button>
+    <div id="voice-status" style="display:none;"></div>
+    <div id="timer" style="display:none;">0</div>
+    <button id="start-button">
+        <img src="images/microphone.svg" alt="Start"/>
+    </button>
+    <ul id="transcript-list"></ul>
+    <div id="control-bar">
+        <div id="stop-button-container">
+            <button id="stop-button">
+                <img src="images/stop.svg" alt="Stop"/>
+                <div id="global-timer">0</div>
+            </button>
         </div>
-        <ul id="transcript-list"></ul>
+        <button id="copy-all">Copy all</button>
     </div>
-    <div id="audio-control-bar"></div>
-    <script type="module"src="script.js"></script>
-<!--<script type="module" src="script.js"></script>-->
+    <script src="script.js"></script>
 </body>
 </html>
+<!--<script type="module" src="script.js"></script>-->
