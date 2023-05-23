@@ -114,6 +114,8 @@ button {
     line-height: 0;
     background-color: var(--background-color);
     color: white;
+    z-index: 1;
+    position: relative;
 }
 
 #stop-button img {
@@ -272,6 +274,11 @@ a:link, a:visited, a:hover, a:active {
 
 #control-bar #stop-button {
     align-self: center;
+}
+
+#control-bar canvas {
+    position: absolute;
+    z-index: 0;
 }
 
 #copy-all{
