@@ -159,7 +159,7 @@ button {
 }
 
 #transcript-list li:hover {
-    background-color: #000000;
+    background-color: #0B020D;
     transition: background-color 250ms ease-in;
 }
 
