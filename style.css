@@ -305,7 +305,7 @@ a:link, a:visited, a:hover, a:active {
     position: relative;
     left: 0px;
     width: 100%;
-    max-width: 445px;
+    max-width: 465px;
     filter: invert(100%);
 }
 
