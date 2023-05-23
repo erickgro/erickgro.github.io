@@ -20,7 +20,7 @@ visualizerCanvas = document.createElement('canvas');
 visualizerCanvas.width = 500;
 visualizerCanvas.height = 160;
 
-document.body.appendChild(visualizerCanvas);
+document.getElementById('control-bar').appendChild(visualizerCanvas);
 visualizerCanvas.style.display = 'none';
 
 visualizerContext = visualizerCanvas.getContext('2d');
