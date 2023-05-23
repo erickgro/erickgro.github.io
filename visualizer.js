@@ -48,7 +48,7 @@ function visualize() {
   let baseRadius = (120/ 2); // Set the minimum diameter to 96px
   let barWidth = (2 * Math.PI) / bufferLength;
 
-  let maxBarLength = (2000 / 2) - baseRadius; // Set the maximum diameter to 140px
+  let maxBarLength = (1280 / 2) - baseRadius; // Set the maximum diameter to 140px
   
   // Normalize dataArray values and map to a sensitivity range
   let normalizedDataArray = dataArray.map(value => (value / 255) * 20);
@@ -64,7 +64,7 @@ function visualize() {
 
   // Draw first line (red)
   visualizerContext.beginPath();
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#FF0000', sensitivity + 8.5, normalizedDataArray,maxBarLength);
+  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#FF0000', sensitivity + 9, normalizedDataArray,maxBarLength);
   visualizerContext.stroke();
 
   // Draw second line (green)
