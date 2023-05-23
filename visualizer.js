@@ -64,22 +64,18 @@ function visualize() {
 
   // Draw first line (red)
   visualizerContext.beginPath();
-  visualizerContext.lineWidth = 4.5;
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#FF0000', sensitivity + 11, normalizedDataArray,maxBarLength);
+  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#FF0000', sensitivity + 12, normalizedDataArray,maxBarLength, rms, 4);
   visualizerContext.stroke();
 
   // Draw second line (green)
   visualizerContext.beginPath();
-  visualizerContext.lineWidth = 3;
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 8, normalizedDataArray,maxBarLength);
+  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 8, normalizedDataArray,maxBarLength, rms, 4);
   visualizerContext.stroke();
 
   // Draw third line (blue)
   visualizerContext.beginPath();
-  visualizerContext.lineWidth = 3;
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity + 3.5, normalizedDataArray,maxBarLength);
+  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity + 3.5, normalizedDataArray,maxBarLength, rms, 4);
   visualizerContext.stroke();
-
 
   visualizerContext.globalCompositeOperation = 'source-over'; // Reset blend mode here
 }
@@ -89,7 +85,7 @@ function map(value, start1, stop1, start2, stop2) {
 }
 
 
-function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength, color, sensitivity, normalizedDataArray, maxBarLength) {
+function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength, color, sensitivity, normalizedDataArray, maxBarLength, rms, maxLineWidth) {
   let localDataArray = [...normalizedDataArray];  // Make a local copy of the data array
   
   // Create a mirror effect from last quarter of array to the first quarter with varying intensity
@@ -112,8 +108,14 @@ function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength
     }
   }
   visualizerContext.closePath();
+  
+  // Dynamically adjust lineWidth based on sound volume and set a maximum value
+  visualizerContext.lineWidth = Math.min(map(rms, 0, 255, 1, sensitivity), maxLineWidth);
+
   visualizerContext.strokeStyle = color;
   visualizerContext.stroke();
+
+  //console.log(`lineWidth: ${visualizerContext.lineWidth}`);
 }
 
 
