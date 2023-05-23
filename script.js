@@ -1,4 +1,4 @@
-/// import { startVisualizer, stopVisualizer } from './visualizer.js';
+import { startVisualizer, stopVisualizer } from './visualizer.js';
 
 document.addEventListener('DOMContentLoaded', (event) => {
     // Initialize variables and get UI elements    
@@ -197,6 +197,7 @@ function startListening() {
             mediaStream = stream;
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
+            startVisualizer(mediaStream);  // START VISUALIZER
 
             mediaRecorder.ondataavailable = function(e) {
                 recordedChunks.push(e.data);
@@ -234,6 +235,8 @@ function stopListening() {
         controlBar.appendChild(audioElement);
         controlBar.appendChild(copyAllButton);
     };
+
+    stopVisualizer(); // STOP VISUALIZER
 }
 
 const startButton = document.getElementById('start-button');

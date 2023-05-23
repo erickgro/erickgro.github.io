@@ -10,7 +10,7 @@
     --main-hovered: #D591E5;
     --main-active: #C47AD7;
     --secondary-active: #1B0720;
-    --red-color: #FF453A;
+    --stop-color: #000000;
     --background-color: #0D0C0B;
 }
 
@@ -112,19 +112,20 @@ button {
 
 #stop-button {
     line-height: 0;
-    background-color: var(--red-color);
+    background-color: var(--background-color);
+    color: white;
 }
 
 #stop-button img {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     transform: translateY(12px);
     line-height: 0;
     margin-bottom: 28px;
 }
 
 #stop-button:hover, #stop-button:active {
-    background-color: #FF6B5F;
+    background-color: #230E0B;
 }
 
 
