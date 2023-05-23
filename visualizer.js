@@ -17,7 +17,7 @@ function initAudioContext() {
 }
 
 visualizerCanvas = document.createElement('canvas');
-visualizerCanvas.width = 560;
+visualizerCanvas.width = 580;
 visualizerCanvas.height = 160;
 
 document.getElementById('control-bar').appendChild(visualizerCanvas);
