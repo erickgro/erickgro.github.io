@@ -112,10 +112,15 @@ function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength
   // Dynamically adjust lineWidth based on sound volume and set a maximum value
   visualizerContext.lineWidth = Math.min(map(rms, 0, 255, 1, sensitivity), maxLineWidth);
 
-  visualizerContext.strokeStyle = color;
-  visualizerContext.stroke();
+  let opacity;
+  if (rms < 5) {
+    opacity = 0; // If rms is near zero, make line fully transparent
+  } else {
+    opacity = map(rms, 0, 255, 0.2, 1); // Map rms to a opacity range of 0.2 - 1
+  }
+  visualizerContext.strokeStyle = color + Math.round(opacity * 255).toString(16).padStart(2, '0'); // append the opacity to the color
 
-  //console.log(`lineWidth: ${visualizerContext.lineWidth}`);
+  visualizerContext.stroke();
 }
 
 
