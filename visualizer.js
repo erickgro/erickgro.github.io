@@ -18,7 +18,7 @@ function initAudioContext() {
 
 visualizerCanvas = document.createElement('canvas');
 visualizerCanvas.width = 580;
-visualizerCanvas.height = 160;
+visualizerCanvas.height = 200;
 
 document.getElementById('control-bar').appendChild(visualizerCanvas);
 visualizerCanvas.style.display = 'none';
@@ -58,13 +58,13 @@ function visualize() {
   let rms = Math.sqrt(dataArray.reduce((acc, val) => acc + val ** 2, 0) / dataArray.length);
 
   // Map rms (0-255) to a sensitivity range, e.g., 11-15
-  let sensitivity = map(rms, 0, 255, 11, 15);
+  let sensitivity = map(rms, 0, 255, 2, 35);
 
   visualizerContext.globalCompositeOperation = 'screen'; // Set blend mode here
 
   // Draw first line (red)
   visualizerContext.beginPath();
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#FF0000', sensitivity + 9, normalizedDataArray,maxBarLength);
+  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#FF0000', sensitivity + 10, normalizedDataArray,maxBarLength);
   visualizerContext.stroke();
 
   // Draw second line (green)
@@ -74,7 +74,7 @@ function visualize() {
 
   // Draw third line (blue)
   visualizerContext.beginPath();
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity - 2.3, normalizedDataArray,maxBarLength);
+  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity - 1.2, normalizedDataArray,maxBarLength);
   visualizerContext.stroke();
 
   visualizerContext.globalCompositeOperation = 'source-over'; // Reset blend mode here
