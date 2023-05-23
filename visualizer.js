@@ -87,6 +87,14 @@ function map(value, start1, stop1, start2, stop2) {
 
 function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength, color, sensitivity, normalizedDataArray, maxBarLength) {
   let localDataArray = [...normalizedDataArray];  // Make a local copy of the data array
+  
+  // Create a mirror effect from last quarter of array to the first quarter with varying intensity
+  for (let i = 0; i < bufferLength / 4; i++) {
+    // Increase intensity towards the start (angle 0) and decrease as we move towards angle 90
+    let intensity = (1 - i / (bufferLength / 4)); // From 1 down to 0 over the first quarter
+    localDataArray[i] = (localDataArray[i] * (1 - intensity) + localDataArray[bufferLength - i - 1] * intensity);
+  }
+  
   for (let i = 0; i < bufferLength; i++) {
     let barLength = Math.min(localDataArray[i] * sensitivity, maxBarLength);
     barLength = barLength * (baseRadius / maxBarLength);
