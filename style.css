@@ -266,6 +266,7 @@ a:link, a:visited, a:hover, a:active {
     justify-content: center;
     align-items: center;
     flex-grow: 1;
+    background-color: transparent;
 }
 
 #control-bar #copy-all {
