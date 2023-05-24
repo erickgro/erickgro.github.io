@@ -64,18 +64,19 @@ function visualize() {
 
   // Draw first line (red)
   visualizerContext.beginPath();
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#FF0000', sensitivity + 12, normalizedDataArray,maxBarLength, rms, 4);
+  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#FF0000', sensitivity + 12, normalizedDataArray,maxBarLength, rms, 3);
   visualizerContext.stroke();
 
   // Draw second line (green)
   visualizerContext.beginPath();
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 8, normalizedDataArray,maxBarLength, rms, 4);
+  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 8, normalizedDataArray,maxBarLength, rms, 2.5);
   visualizerContext.stroke();
 
   // Draw third line (blue)
   visualizerContext.beginPath();
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity + 3.5, normalizedDataArray,maxBarLength, rms, 4);
+  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity + 3.5, normalizedDataArray,maxBarLength, rms, 2);
   visualizerContext.stroke();
+
 
   visualizerContext.globalCompositeOperation = 'source-over'; // Reset blend mode here
 }
