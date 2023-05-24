@@ -154,33 +154,3 @@ function getUserMedia(constraints) {
     });
   });
 }
-
-
-
-
-async function start() {
-  try {
-    if (!audioCtx) {
-      initAudioContext();
-    }
-    const stream = await getUserMedia({ audio: true });
-    if (stream && stream instanceof MediaStream) {
-      startVisualizer(stream);
-      startButton.disabled = true;
-      stopButton.disabled = false;
-    } else {
-      console.error('Error accessing the microphone: Invalid media stream');
-    }
-  } catch (error) {
-    console.error('Error accessing the microphone:', error);
-  }
-}
-
-function stop() {
-  stopVisualizer();
-  startButton.disabled = false;
-  stopButton.disabled = true;
-}
-
-startButton.addEventListener('click', start);
-stopButton.addEventListener('click', stop);
