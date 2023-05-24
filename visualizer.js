@@ -1,4 +1,3 @@
-// Audio Visualizer Code
 let audioCtx;
 let source;
 let analyser;
@@ -11,16 +10,16 @@ let visualizerAnimationId;
 function initAudioContext() {
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 256;
+  analyser.fftSize = 512;
   bufferLength = analyser.frequencyBinCount;
   dataArray = new Uint8Array(bufferLength);
 }
 
 visualizerCanvas = document.createElement('canvas');
-visualizerCanvas.width = 580;
-visualizerCanvas.height = 200;
+visualizerCanvas.width = 500;
+visualizerCanvas.height = 160;
 
-document.getElementById('control-bar').appendChild(visualizerCanvas);
+document.body.appendChild(visualizerCanvas);
 visualizerCanvas.style.display = 'none';
 
 visualizerContext = visualizerCanvas.getContext('2d');
@@ -39,7 +38,6 @@ function visualize() {
   visualizerAnimationId = requestAnimationFrame(visualize);
   analyser.getByteFrequencyData(dataArray);
 
-  // Fill the background with color #0D0C0B
   visualizerContext.fillStyle = '#0D0C0B';
   visualizerContext.fillRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
 
@@ -60,7 +58,7 @@ function visualize() {
   // Map rms (0-255) to a sensitivity range, e.g., 11-15
   let sensitivity = map(rms, 0, 255, 2, 35);
 
-  visualizerContext.globalCompositeOperation = 'screen'; // Set blend mode here
+  visualizerContext.globalCompositeOperation = 'screen';
 
   // Draw first line (red)
   visualizerContext.beginPath();
@@ -78,13 +76,12 @@ function visualize() {
   visualizerContext.stroke();
 
 
-  visualizerContext.globalCompositeOperation = 'source-over'; // Reset blend mode here
+  visualizerContext.globalCompositeOperation = 'source-over';
 }
 
 function map(value, start1, stop1, start2, stop2) {
   return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
 }
-
 
 function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength, color, sensitivity, normalizedDataArray, maxBarLength, rms, maxLineWidth) {
   let localDataArray = [...normalizedDataArray];  // Make a local copy of the data array
@@ -157,6 +154,3 @@ function getUserMedia(constraints) {
     });
   });
 }
-
-
-export { startVisualizer, stopVisualizer };
