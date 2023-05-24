@@ -45,7 +45,7 @@ function visualize() {
 
   let centerX = visualizerCanvas.width / 2;
   let centerY = visualizerCanvas.height / 2;
-  let baseRadius = (120/ 2); // Set the minimum diameter to 96px
+  let baseRadius = (116/ 2); // Set the minimum diameter to 96px
   let barWidth = (2 * Math.PI) / bufferLength;
 
   let maxBarLength = (1280 / 2) - baseRadius; // Set the maximum diameter to 140px
