@@ -1,4 +1,3 @@
-// Audio Visualizer Code
 let audioCtx;
 let source;
 let analyser;
@@ -11,16 +10,16 @@ let visualizerAnimationId;
 function initAudioContext() {
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 256;
+  analyser.fftSize = 512;
   bufferLength = analyser.frequencyBinCount;
   dataArray = new Uint8Array(bufferLength);
 }
 
 visualizerCanvas = document.createElement('canvas');
-visualizerCanvas.width = 580;
-visualizerCanvas.height = 200;
+visualizerCanvas.width = 500;
+visualizerCanvas.height = 160;
 
-document.getElementById('control-bar').appendChild(visualizerCanvas);
+document.body.appendChild(visualizerCanvas);
 visualizerCanvas.style.display = 'none';
 
 visualizerContext = visualizerCanvas.getContext('2d');
@@ -39,13 +38,12 @@ function visualize() {
   visualizerAnimationId = requestAnimationFrame(visualize);
   analyser.getByteFrequencyData(dataArray);
 
-  // Fill the background with color #0D0C0B
   visualizerContext.fillStyle = '#0D0C0B';
   visualizerContext.fillRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
 
   let centerX = visualizerCanvas.width / 2;
   let centerY = visualizerCanvas.height / 2;
-  let baseRadius = (116/ 2); // Set the minimum diameter to 96px
+  let baseRadius = (120/ 2); // Set the minimum diameter to 96px
   let barWidth = (2 * Math.PI) / bufferLength;
 
   let maxBarLength = (1280 / 2) - baseRadius; // Set the maximum diameter to 140px
@@ -60,7 +58,7 @@ function visualize() {
   // Map rms (0-255) to a sensitivity range, e.g., 11-15
   let sensitivity = map(rms, 0, 255, 2, 35);
 
-  visualizerContext.globalCompositeOperation = 'screen'; // Set blend mode here
+  visualizerContext.globalCompositeOperation = 'screen';
 
   // Draw first line (red)
   visualizerContext.beginPath();
@@ -77,13 +75,13 @@ function visualize() {
   drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity + 3.5, normalizedDataArray,maxBarLength, rms, 4);
   visualizerContext.stroke();
 
-  visualizerContext.globalCompositeOperation = 'source-over'; // Reset blend mode here
+
+  visualizerContext.globalCompositeOperation = 'source-over';
 }
 
 function map(value, start1, stop1, start2, stop2) {
   return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
 }
-
 
 function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength, color, sensitivity, normalizedDataArray, maxBarLength, rms, maxLineWidth) {
   let localDataArray = [...normalizedDataArray];  // Make a local copy of the data array
@@ -112,15 +110,10 @@ function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength
   // Dynamically adjust lineWidth based on sound volume and set a maximum value
   visualizerContext.lineWidth = Math.min(map(rms, 0, 255, 1, sensitivity), maxLineWidth);
 
-  let opacity;
-  if (rms < 5) {
-    opacity = 0; // If rms is near zero, make line fully transparent
-  } else {
-    opacity = map(rms, 0, 255, 0.2, 1); // Map rms to a opacity range of 0.2 - 1
-  }
-  visualizerContext.strokeStyle = color + Math.round(opacity * 255).toString(16).padStart(2, '0'); // append the opacity to the color
-
+  visualizerContext.strokeStyle = color;
   visualizerContext.stroke();
+
+  //console.log(`lineWidth: ${visualizerContext.lineWidth}`);
 }
 
 
@@ -163,4 +156,31 @@ function getUserMedia(constraints) {
 }
 
 
-export { startVisualizer, stopVisualizer };
+
+
+async function start() {
+  try {
+    if (!audioCtx) {
+      initAudioContext();
+    }
+    const stream = await getUserMedia({ audio: true });
+    if (stream && stream instanceof MediaStream) {
+      startVisualizer(stream);
+      startButton.disabled = true;
+      stopButton.disabled = false;
+    } else {
+      console.error('Error accessing the microphone: Invalid media stream');
+    }
+  } catch (error) {
+    console.error('Error accessing the microphone:', error);
+  }
+}
+
+function stop() {
+  stopVisualizer();
+  startButton.disabled = false;
+  stopButton.disabled = true;
+}
+
+startButton.addEventListener('click', start);
+stopButton.addEventListener('click', stop);
