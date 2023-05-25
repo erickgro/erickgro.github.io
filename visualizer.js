@@ -114,6 +114,7 @@ function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength
   let opacity;
   if (staticOpacity) {
     opacity = 1; // static opacity for the red line
+    color = rms < 5 ? '#EC5545' : '#FF0000'; // Change color based on rms value
   } else {
     if (rms < 5) {
       opacity = 0; // If rms is near zero, make line fully transparent
