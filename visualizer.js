@@ -139,7 +139,7 @@ function map(value, start1, stop1, start2, stop2) {
   let opacity;
   if (staticOpacity) {
     opacity = 1; // static opacity for the red line
-    color = rms < 5 ? '#FFFFFF' : '#FF0000'; // Change color based on rms value
+    color = rms < 5 ? '#230E0B' : '#FF0000'; // Change color based on rms value
   } else {
     if (rms < 5) {
       opacity = 0; // If rms is near zero, make line fully transparent
