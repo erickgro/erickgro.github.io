@@ -39,7 +39,6 @@ function visualize() {
   visualizerAnimationId = requestAnimationFrame(visualize);
   analyser.getByteFrequencyData(dataArray);
 
-  // Fill the background with color #0D0C0B
   visualizerContext.fillStyle = '#0D0C0B';
   visualizerContext.fillRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
 
@@ -60,33 +59,32 @@ function visualize() {
   // Map rms (0-255) to a sensitivity range, e.g., 11-15
   let sensitivity = map(rms, 0, 255, 2, 35);
 
-  visualizerContext.globalCompositeOperation = 'screen'; // Set blend mode here
+  visualizerContext.globalCompositeOperation = 'screen';
 
-  // Draw first line (red)
-  visualizerContext.beginPath();
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#FF0000', sensitivity + 12, normalizedDataArray,maxBarLength, rms, 3);
-  visualizerContext.stroke();
+// Draw first line (red)
+visualizerContext.beginPath();
+drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#EC5545', sensitivity + 12, normalizedDataArray,maxBarLength, rms, 3, true); // staticOpacity is true for red line
+visualizerContext.stroke();
 
-  // Draw second line (green)
-  visualizerContext.beginPath();
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 8, normalizedDataArray,maxBarLength, rms, 2.5);
-  visualizerContext.stroke();
+// Draw second line (green)
+visualizerContext.beginPath();
+drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 8, normalizedDataArray,maxBarLength, rms, 2.5);
+visualizerContext.stroke();
 
-  // Draw third line (blue)
-  visualizerContext.beginPath();
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity + 3.5, normalizedDataArray,maxBarLength, rms, 2);
-  visualizerContext.stroke();
+// Draw third line (blue)
+visualizerContext.beginPath();
+drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity + 3.5, normalizedDataArray,maxBarLength, rms, 2);
+visualizerContext.stroke();
 
-
-  visualizerContext.globalCompositeOperation = 'source-over'; // Reset blend mode here
+  visualizerContext.globalCompositeOperation = 'source-over';
 }
 
 function map(value, start1, stop1, start2, stop2) {
   return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
 }
 
+function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength, color, sensitivity, normalizedDataArray, maxBarLength, rms, maxLineWidth, staticOpacity = false) {
 
-function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength, color, sensitivity, normalizedDataArray, maxBarLength, rms, maxLineWidth) {
   let localDataArray = [...normalizedDataArray];  // Make a local copy of the data array
   
   // Create a mirror effect from last quarter of array to the first quarter with varying intensity
@@ -113,12 +111,21 @@ function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength
   // Dynamically adjust lineWidth based on sound volume and set a maximum value
   visualizerContext.lineWidth = Math.min(map(rms, 0, 255, 1, sensitivity), maxLineWidth);
 
-  visualizerContext.strokeStyle = color;
+  let opacity;
+  if (staticOpacity) {
+    opacity = 1; // static opacity for the red line
+  } else {
+    if (rms < 5) {
+      opacity = 0; // If rms is near zero, make line fully transparent
+    } else {
+      opacity = map(rms, 0, 255, 0.8, 1); // Map rms to a opacity range of 0.2 - 1
+    }
+  }
+  
+  visualizerContext.strokeStyle = color + Math.round(opacity * 255).toString(16).padStart(2, '0'); // append the opacity to the color
+
   visualizerContext.stroke();
-
-  //console.log(`lineWidth: ${visualizerContext.lineWidth}`);
 }
-
 
 function stopVisualizer() {
   source.disconnect();
