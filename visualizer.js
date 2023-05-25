@@ -1,4 +1,3 @@
-// Audio Visualizer Code
 let audioCtx;
 let source;
 let analyser;
@@ -14,6 +13,15 @@ function initAudioContext() {
   analyser.fftSize = 256;
   bufferLength = analyser.frequencyBinCount;
   dataArray = new Uint8Array(bufferLength);
+}
+
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
 }
 
 visualizerCanvas = document.createElement('canvas');
@@ -49,15 +57,13 @@ function visualize() {
 
   let maxBarLength = (1280 / 2) - baseRadius; // Set the maximum diameter to 140px
   
-  // Normalize dataArray values and map to a sensitivity range
+
   let normalizedDataArray = dataArray.map(value => (value / 255) * 20);
   let newBufferLength = bufferLength / 2;
 
-  // Calculate the root mean square (RMS) of the dataArray
   let rms = Math.sqrt(dataArray.reduce((acc, val) => acc + val ** 2, 0) / dataArray.length);
 
   //console.log("RMS Value: " + rms);
-
 
   // Map rms (0-255) to a sensitivity range, e.g., 11-15
   let sensitivity = map(rms, 0, 255, 2, 35);
@@ -73,32 +79,17 @@ function visualize() {
   let centerYBlue = centerY - displacement;
 
 
-
-
-  // Draw red line with adjusted center
   visualizerContext.beginPath();
   drawVisualizerLine(centerXRed, centerYRed, baseRadius, barWidth, newBufferLength, '#EC5545', sensitivity + 13, normalizedDataArray, maxBarLength, rms, 2.8, -displacement, true);
   visualizerContext.stroke();
 
-  // Draw second line (green)
   visualizerContext.beginPath();
   drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 10, normalizedDataArray,maxBarLength, rms, 2.8);
   visualizerContext.stroke();
 
-  // Draw blue line with adjusted center
   visualizerContext.beginPath();
   drawVisualizerLine(centerXBlue, centerYBlue, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity +11.5, normalizedDataArray, maxBarLength, rms, 4.1, +displacement);
   visualizerContext.stroke();
-
- // Draw red line
-  //visualizerContext.beginPath();
-  //drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#EC5545', sensitivity + 12, normalizedDataArray, maxBarLength, rms, 3.5, -displacement, true);
-  //visualizerContext.stroke();
-
-  // Draw blue line
-  //visualizerContext.beginPath();
-  //drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity + 7.5, normalizedDataArray, maxBarLength, rms, 3.5, +displacement);
-  //visualizerContext.stroke();
 
   visualizerContext.globalCompositeOperation = 'source-over';
 }
@@ -109,13 +100,11 @@ function map(value, start1, stop1, start2, stop2) {
 
   function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength, color, sensitivity, normalizedDataArray, maxBarLength, rms, maxLineWidth, displacement = 0, staticOpacity = false) {
 
-  let localDataArray = [...normalizedDataArray];  // Make a local copy of the data array
+  let localDataArray = [...normalizedDataArray];
   
-  // Create a mirror effect from last quarter of array to the first quarter with varying intensity
   for (let i = 0; i < bufferLength / 4; i++) {
-  // Increase intensity towards the start (angle 0) and decrease as we move towards angle 90
-  let intensity = (1 - i / (bufferLength / 4)); // From 1 down to 0 over the first quarter
-  localDataArray[i] = (localDataArray[i] * (1 - intensity) + localDataArray[bufferLength - i - 1] * intensity);
+    let intensity = (1 - i / (bufferLength / 4)); 
+    localDataArray[i] = (localDataArray[i] * (1 - intensity) + localDataArray[bufferLength - i - 1] * intensity);
   }
   
   for (let i = 0; i < bufferLength; i++) {
@@ -148,9 +137,10 @@ function map(value, start1, stop1, start2, stop2) {
     }
   }
   
-  visualizerContext.strokeStyle = color + Math.round(opacity * 255).toString(16).padStart(2, '0'); // append the opacity to the color
+let rgbColor = hexToRgb(color);
+visualizerContext.strokeStyle = `rgba(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b}, ${opacity})`;
 
-  visualizerContext.stroke();
+visualizerContext.stroke();
 }
 
 function stopVisualizer() {
@@ -190,8 +180,5 @@ function getUserMedia(constraints) {
     });
   });
 }
-
-
-
 
 export { startVisualizer, stopVisualizer };
