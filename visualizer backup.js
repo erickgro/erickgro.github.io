@@ -56,49 +56,25 @@ function visualize() {
   // Calculate the root mean square (RMS) of the dataArray
   let rms = Math.sqrt(dataArray.reduce((acc, val) => acc + val ** 2, 0) / dataArray.length);
 
-  //console.log("RMS Value: " + rms);
-
-
   // Map rms (0-255) to a sensitivity range, e.g., 11-15
   let sensitivity = map(rms, 0, 255, 2, 35);
 
   visualizerContext.globalCompositeOperation = 'screen';
 
-  let displacementScale = 0.012; // Change this value to your desired scaling factor
-  let displacement = rms > 96 ? displacementScale * (rms - 10) : 0;
+// Draw first line (red)
+visualizerContext.beginPath();
+drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#EC5545', sensitivity + 13, normalizedDataArray,maxBarLength, rms, 2.5, true); // staticOpacity is true for red line
+visualizerContext.stroke();
 
-  let centerXRed = centerX + displacement;
-  let centerYRed = centerY + displacement;
-  let centerXBlue = centerX - displacement;
-  let centerYBlue = centerY - displacement;
+// Draw second line (green)
+visualizerContext.beginPath();
+drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 10, normalizedDataArray,maxBarLength, rms, 2.8);
+visualizerContext.stroke();
 
-
-
-
-  // Draw red line with adjusted center
-  visualizerContext.beginPath();
-  drawVisualizerLine(centerXRed, centerYRed, baseRadius, barWidth, newBufferLength, '#EC5545', sensitivity + 13, normalizedDataArray, maxBarLength, rms, 2.8, -displacement, true);
-  visualizerContext.stroke();
-
-  // Draw second line (green)
-  visualizerContext.beginPath();
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 10, normalizedDataArray,maxBarLength, rms, 2.8);
-  visualizerContext.stroke();
-
-  // Draw blue line with adjusted center
-  visualizerContext.beginPath();
-  drawVisualizerLine(centerXBlue, centerYBlue, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity +11.5, normalizedDataArray, maxBarLength, rms, 4.1, +displacement);
-  visualizerContext.stroke();
-
- // Draw red line
-  //visualizerContext.beginPath();
-  //drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#EC5545', sensitivity + 12, normalizedDataArray, maxBarLength, rms, 3.5, -displacement, true);
-  //visualizerContext.stroke();
-
-  // Draw blue line
-  //visualizerContext.beginPath();
-  //drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity + 7.5, normalizedDataArray, maxBarLength, rms, 3.5, +displacement);
-  //visualizerContext.stroke();
+// Draw third line (blue)
+visualizerContext.beginPath();
+drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity + 7.5, normalizedDataArray,maxBarLength, rms, 3.8);
+visualizerContext.stroke();
 
   visualizerContext.globalCompositeOperation = 'source-over';
 }
@@ -107,24 +83,23 @@ function map(value, start1, stop1, start2, stop2) {
   return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
 }
 
-  function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength, color, sensitivity, normalizedDataArray, maxBarLength, rms, maxLineWidth, displacement = 0, staticOpacity = false) {
+function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength, color, sensitivity, normalizedDataArray, maxBarLength, rms, maxLineWidth, staticOpacity = false) {
 
   let localDataArray = [...normalizedDataArray];  // Make a local copy of the data array
   
   // Create a mirror effect from last quarter of array to the first quarter with varying intensity
   for (let i = 0; i < bufferLength / 4; i++) {
-  // Increase intensity towards the start (angle 0) and decrease as we move towards angle 90
-  let intensity = (1 - i / (bufferLength / 4)); // From 1 down to 0 over the first quarter
-  localDataArray[i] = (localDataArray[i] * (1 - intensity) + localDataArray[bufferLength - i - 1] * intensity);
+    // Increase intensity towards the start (angle 0) and decrease as we move towards angle 90
+    let intensity = (1 - i / (bufferLength / 4)); // From 1 down to 0 over the first quarter
+    localDataArray[i] = (localDataArray[i] * (1 - intensity) + localDataArray[bufferLength - i - 1] * intensity);
   }
   
   for (let i = 0; i < bufferLength; i++) {
     let barLength = Math.min(localDataArray[i] * sensitivity, maxBarLength);
     barLength = barLength * (baseRadius / maxBarLength);
     let angle = i * barWidth * 2;
-    let x = centerX + (baseRadius + barLength) * Math.cos(angle) - displacement;
-    let y = centerY + (baseRadius + barLength) * Math.sin(angle) - displacement;
-
+    let x = centerX + (baseRadius + barLength) * Math.cos(angle);
+    let y = centerY + (baseRadius + barLength) * Math.sin(angle);
     if (i === 0) {
       visualizerContext.moveTo(x, y);
     } else {
@@ -139,7 +114,7 @@ function map(value, start1, stop1, start2, stop2) {
   let opacity;
   if (staticOpacity) {
     opacity = 1; // static opacity for the red line
-    color = rms < 5 ? '#FFFFFF' : '#FF0000'; // Change color based on rms value
+    color = rms < 5 ? '#EC5545' : '#FF0000'; // Change color based on rms value
   } else {
     if (rms < 5) {
       opacity = 0; // If rms is near zero, make line fully transparent
@@ -190,8 +165,6 @@ function getUserMedia(constraints) {
     });
   });
 }
-
-
 
 
 export { startVisualizer, stopVisualizer };
