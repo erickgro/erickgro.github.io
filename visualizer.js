@@ -63,17 +63,17 @@ function visualize() {
 
 // Draw first line (red)
 visualizerContext.beginPath();
-drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#EC5545', sensitivity + 12, normalizedDataArray,maxBarLength, rms, 3, true); // staticOpacity is true for red line
+drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#EC5545', sensitivity + 13, normalizedDataArray,maxBarLength, rms, 2.5, true); // staticOpacity is true for red line
 visualizerContext.stroke();
 
 // Draw second line (green)
 visualizerContext.beginPath();
-drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 8, normalizedDataArray,maxBarLength, rms, 2.5);
+drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 10, normalizedDataArray,maxBarLength, rms, 2.8);
 visualizerContext.stroke();
 
 // Draw third line (blue)
 visualizerContext.beginPath();
-drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity + 3.5, normalizedDataArray,maxBarLength, rms, 2);
+drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity + 7.5, normalizedDataArray,maxBarLength, rms, 3.8);
 visualizerContext.stroke();
 
   visualizerContext.globalCompositeOperation = 'source-over';
