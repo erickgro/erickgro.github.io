@@ -15,15 +15,6 @@ function initAudioContext() {
   dataArray = new Uint8Array(bufferLength);
 }
 
-function hexToRgb(hex) {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
-}
-
 visualizerCanvas = document.createElement('canvas');
 visualizerCanvas.width = 580;
 visualizerCanvas.height = 200;
@@ -128,19 +119,18 @@ function map(value, start1, stop1, start2, stop2) {
   let opacity;
   if (staticOpacity) {
     opacity = 1; // static opacity for the red line
-    color = rms < 5 ? '#230E0B' : '#FF0000'; // Change color based on rms value
+    color = rms < 15 ? '#230E0B' : '#FF0000'; // Change color based on rms value
   } else {
-    if (rms < 5) {
+    if (rms < 15) {
       opacity = 0; // If rms is near zero, make line fully transparent
     } else {
       opacity = map(rms, 0, 255, 0.8, 1); // Map rms to a opacity range of 0.2 - 1
     }
   }
   
-let rgbColor = hexToRgb(color);
-visualizerContext.strokeStyle = `rgba(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b}, ${opacity})`;
+  visualizerContext.strokeStyle = color + Math.round(opacity * 255).toString(16).padStart(2, '0');
 
-visualizerContext.stroke();
+  visualizerContext.stroke();
 }
 
 function stopVisualizer() {
