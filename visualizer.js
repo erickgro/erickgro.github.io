@@ -71,7 +71,7 @@ function visualize() {
 
 
   visualizerContext.beginPath();
-  drawVisualizerLine(centerXRed, centerYRed, baseRadius, barWidth, newBufferLength, '#EC5545', sensitivity + 13, normalizedDataArray, maxBarLength, rms, 2.8, -displacement, true);
+  drawVisualizerLine(centerXRed, centerYRed, baseRadius, barWidth, newBufferLength, '#230E0B', sensitivity + 13, normalizedDataArray, maxBarLength, rms, 2.8, -displacement, true);
   visualizerContext.stroke();
 
   visualizerContext.beginPath();
