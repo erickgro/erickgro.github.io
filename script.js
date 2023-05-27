@@ -197,7 +197,7 @@ function startListening() {
             mediaStream = stream;
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
-            startVisualizer(mediaStream);  // START VISUALIZER
+            tartVisualizer(mediaStream);  // START VISUALIZER
 
             mediaRecorder.ondataavailable = function(e) {
                 recordedChunks.push(e.data);
@@ -258,7 +258,7 @@ startButton.addEventListener('click', function() {
     copyAllButton.style.display = 'none';
 
     // Add bottom border to controlBar
-    controlBar.style.borderBottom = "1px solid #2C2C2E";
+    //controlBar.style.borderBottom = "1px solid #2C2C2E";
 });
 
 stopButton.addEventListener('click', function() {

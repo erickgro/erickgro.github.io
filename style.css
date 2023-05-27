@@ -77,11 +77,10 @@ button {
 #start-button, #stop-button {
     width: 118px;
     height: 118px;
-    border-radius: 50%;
-    border: none;
-    color: white;
+    border-radius: 50%;    
     text-align: center;
     line-height: 100px;
+    border: none;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -93,27 +92,94 @@ button {
     outline: none;
     box-shadow: none;
     user-select: none;
+    position: relative;
 }
 
 #start-button {
-    background-color: var(--main-color);
+    background-color: var(--background-color);
 }
-#start-button img {
-    width: 24px;
-    height: 24px;
+
+#start-button::before, #start-button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: inherit;
+    transition: transform 0.3s ease-out;
+    mix-blend-mode: screen;
+}
+
+#start-button::before {
+    border: 1px solid #0000FF;
+}
+
+#start-button::after {
+    border: 1px solid #FF0000;
+}
+
+#start-button {
+    border: 1px solid #00FF00;
+    transition: transform 0.3s ease-out, border-width 0.1s ease-out, background-color 0.3s ease-out;
+}
+
+#start-button:hover::before {
+    transform:  translate(-2.5px, -2.5px);
+    border-width: 2px;
+}
+
+#start-button:hover::after {
+    transform:  translate(2.5px, 2.5px);
+    border-width: 2px;
 }
 
 #start-button:hover {
-    background-color: var(--main-hovered);
+    border-color: #00FF00;
+    border-width: 1px;
+/*    background-color: #040404;*/
 }
 
-#start-button:active{
+.microphone-icon {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    mix-blend-mode: screen;
+}
+
+.microphone-icon:nth-child(n+2) {
+    opacity: 0;
+}
+
+#start-button:hover .microphone-icon:nth-child(1) {
+    opacity: 0; 
+}
+
+#start-button:hover .microphone-icon:nth-child(2) {
+    transform: translate(0px, 0px);
+    opacity: 1; 
+}
+
+#start-button:hover .microphone-icon:nth-child(3) {
+    transform: translate(2.6px, 2.6px);
+    opacity: 1; 
+}
+
+#start-button:hover .microphone-icon:nth-child(4) {
+    transform: translate(-2.6px, -2.6px);
+    opacity: 1; 
+}
+
+#start-button:active {
     background-color: var(--main-active);
 }
 
+
 #stop-button {
     line-height: 0;
-    background-color: var(--background-color);
+    background-color: var(--background-color);        
+    border-color: black;
     color: white;
     z-index: 1;
     position: relative;
@@ -255,7 +321,7 @@ a:link, a:visited, a:hover, a:active {
     height: 160px;
     width: 580px;
     top: 0;
-    background: #0D0C0B;
+    background: linear-gradient(180deg, #0D0C0B 0%, #0D0C0B 96%, rgba(13, 12, 11, 0) 100%);
     display: flex;
     justify-content: space-between;
     align-items: center;
