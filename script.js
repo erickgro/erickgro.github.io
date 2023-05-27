@@ -190,7 +190,6 @@ function startListening() {
         recognition.start();
     }
     startTimer();
-    startGlobalTimer();
 
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(function(stream) {
@@ -198,6 +197,7 @@ function startListening() {
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
             startVisualizer(mediaStream);  // START VISUALIZER
+            startGlobalTimer();  // Start the global timer only after access to the mic is granted
 
             mediaRecorder.ondataavailable = function(e) {
                 recordedChunks.push(e.data);
@@ -250,19 +250,17 @@ stopButton.style.display = 'none';
 startButton.addEventListener('click', function() {
     let startButtonRect = startButton.getBoundingClientRect();
     let stopButtonRect = stopButton.getBoundingClientRect();
-    let stopButtonMarginTop = 41; // stop-button margin from the top
+    let stopButtonMarginTop = 41;
 
     let moveUpDistance = startButtonRect.top - stopButtonRect.top - stopButtonMarginTop;
     startButton.style.setProperty('--move-up-distance', `${-moveUpDistance}px`);
 
     startButton.classList.add('moving');
-
     
     startButton.addEventListener('animationend', function() {
         // start to fade out the button
         startButton.style.opacity = '0';
         stopButton.style.display = 'block';
-        // Start the listening
         startListening();
 
         // Use transitionend event to hide the button after it's faded out
@@ -271,9 +269,6 @@ startButton.addEventListener('click', function() {
         });
 
     });
-
-
-
     // Hide copyAllButton when recording starts
     copyAllButton.style.display = 'none';
 });
