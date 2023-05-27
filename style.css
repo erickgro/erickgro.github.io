@@ -15,7 +15,7 @@
 }
 
 .moving {
-    animation: move-up 1.15s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    animation: move-up 1.15s cubic-bezier(0.75, -0.45, 0.265, 1.55);
 }
 
 :root {
