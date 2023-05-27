@@ -318,7 +318,7 @@ a:link, a:visited, a:hover, a:active {
 
 #control-bar {
     position: fixed;
-    height: 160px;
+    height: 200px;
     width: 580px;
     top: 0;
     background: linear-gradient(180deg, #0D0C0B 0%, #0D0C0B 83.33%, rgba(13, 12, 11, 0.8) 94.27%, rgba(13, 12, 11, 0) 100%);
