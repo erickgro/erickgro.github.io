@@ -257,13 +257,13 @@ startButton.addEventListener('click', function() {
 
     startButton.classList.add('moving');
 
-    // Start the listening
-    startListening();
     
     startButton.addEventListener('animationend', function() {
         // start to fade out the button
         startButton.style.opacity = '0';
         stopButton.style.display = 'block';
+        // Start the listening
+        startListening();
 
         // Use transitionend event to hide the button after it's faded out
         startButton.addEventListener('transitionend', function() {
@@ -271,6 +271,8 @@ startButton.addEventListener('click', function() {
         });
 
     });
+
+
 
     // Hide copyAllButton when recording starts
     copyAllButton.style.display = 'none';
