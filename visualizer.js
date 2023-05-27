@@ -38,8 +38,8 @@ function visualize() {
   visualizerAnimationId = requestAnimationFrame(visualize);
   analyser.getByteFrequencyData(dataArray);
 
-  visualizerContext.fillStyle = '#0D0C0B';
-  visualizerContext.fillRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+  visualizerContext.fillStyle = 'rgba(13, 12, 11, 0)';
+  visualizerContext.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
 
   let centerX = visualizerCanvas.width / 2;
   let centerY = visualizerCanvas.height / 2;
