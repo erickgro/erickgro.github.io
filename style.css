@@ -5,6 +5,17 @@
     to   { opacity: 1; }
 }
 
+@keyframes moveUp {
+    from { transform: translateY(0); }
+    to { transform: translateY(var(--move-up-distance)); } 
+}
+
+.moving {
+    animation: moveUp 1s forwards; 
+    position: absolute;
+}
+
+
 :root {
     --main-color: #DCA9E9;
     --main-hovered: #D591E5;
@@ -97,6 +108,9 @@ button {
 
 #start-button {
     background-color: var(--background-color);
+    z-index: 9999;
+    transition: opacity 0.5s;
+    opacity: 1;
 }
 
 #start-button::before, #start-button::after {

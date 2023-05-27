@@ -246,19 +246,34 @@ const stopButtonContainer = document.getElementById('stop-button-container');
 
 copyAllButton.style.display = 'none';
 stopButton.style.display = 'none';
-startButton.addEventListener('click', function() {
-    // Start the listening and hide startButton
-    startListening();
-    this.style.display = 'none';
 
-    // Show stopButton
-    stopButton.style.display = 'block';
+startButton.addEventListener('click', function() {
+    let startButtonRect = startButton.getBoundingClientRect();
+    let stopButtonRect = stopButton.getBoundingClientRect();
+    let stopButtonMarginTop = 41; // stop-button margin from the top
+
+    let moveUpDistance = startButtonRect.top - stopButtonRect.top - stopButtonMarginTop;
+    startButton.style.setProperty('--move-up-distance', `${-moveUpDistance}px`);
+
+    startButton.classList.add('moving');
+
+    // Start the listening
+    startListening();
+    
+    startButton.addEventListener('animationend', function() {
+        // start to fade out the button
+        startButton.style.opacity = '0';
+        stopButton.style.display = 'block';
+
+        // Use transitionend event to hide the button after it's faded out
+        startButton.addEventListener('transitionend', function() {
+            startButton.style.display = 'none';
+        });
+
+    });
 
     // Hide copyAllButton when recording starts
     copyAllButton.style.display = 'none';
-
-    // Add bottom border to controlBar
-    //controlBar.style.borderBottom = "1px solid #2C2C2E";
 });
 
 stopButton.addEventListener('click', function() {
@@ -286,8 +301,6 @@ copyAllButton.addEventListener('click', function() {
 
     textarea.select();
     document.execCommand('copy');
-
-    // Remove textarea from audio control bar
     controlBar.removeChild(textarea);
 
 });
