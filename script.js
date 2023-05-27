@@ -197,7 +197,7 @@ function startListening() {
             mediaStream = stream;
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
-            tartVisualizer(mediaStream);  // START VISUALIZER
+            startVisualizer(mediaStream);  // START VISUALIZER
 
             mediaRecorder.ondataavailable = function(e) {
                 recordedChunks.push(e.data);
