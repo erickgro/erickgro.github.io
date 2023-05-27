@@ -1,4 +1,4 @@
-import { startVisualizer, stopVisualizer } from './visualizer.js';
+//import { startVisualizer, stopVisualizer } from './visualizer.js';
 
 document.addEventListener('DOMContentLoaded', (event) => {
     // Initialize variables and get UI elements    
@@ -196,7 +196,7 @@ function startListening() {
             mediaStream = stream;
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
-            startVisualizer(mediaStream);  // START VISUALIZER
+            //startVisualizer(mediaStream);  // START VISUALIZER
             startGlobalTimer();  // Start the global timer only after access to the mic is granted
 
             mediaRecorder.ondataavailable = function(e) {
@@ -236,7 +236,7 @@ function stopListening() {
         controlBar.appendChild(copyAllButton);
     };
 
-    stopVisualizer(); // STOP VISUALIZER
+    //stopVisualizer(); // STOP VISUALIZER
 }
 
 const startButton = document.getElementById('start-button');
