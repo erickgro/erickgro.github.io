@@ -130,7 +130,7 @@ function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength
   let opacity;
   if (staticOpacity) {
     opacity = 1; // static opacity for the red line
-    color = rms < 15 ? '#3E1916' : '#FF0000'; // Change color based on rms value
+    color = rms < 15 ? '#200F0B' : '#FF0000'; // Change color based on rms value
   } else {
     if (rms < 15) {
       opacity = 0; // If rms is near zero, make line fully transparent
@@ -144,7 +144,7 @@ function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength
   visualizerContext.stroke();
 
   // After drawing the line, reset the blending mode if necessary:
-  if ((color == '#3E1916' || color == '#FF0000') && rms > 15) {
+  if ((color == '#200F0B' || color == '#FF0000') && rms > 15) {
     visualizerContext.globalCompositeOperation = 'screen';
   }
 }
