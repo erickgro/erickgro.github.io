@@ -256,7 +256,8 @@ startButton.addEventListener('click', function() {
     startButton.style.setProperty('--move-up-distance', `${-moveUpDistance}px`);
 
     startButton.classList.add('moving');
-    
+    startButton.classList.add('clicked');
+
     startButton.addEventListener('animationend', function() {
         // start to fade out the button
         startButton.style.opacity = '0';
