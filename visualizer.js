@@ -75,7 +75,7 @@ function visualize() {
 
 
   visualizerContext.beginPath();
-  drawVisualizerLine(centerXRed, centerYRed, baseRadius, barWidth, newBufferLength, '#230E0B', sensitivity + 13, normalizedDataArray, maxBarLength, rms, 2.8, -displacement, true);
+  drawVisualizerLine(centerXRed, centerYRed, baseRadius, barWidth, newBufferLength, '#200F0B', sensitivity + 13, normalizedDataArray, maxBarLength, rms, 2.8, -displacement, true);
   visualizerContext.stroke();
 
   visualizerContext.beginPath();
@@ -105,7 +105,7 @@ function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength
   }
 
   // Before drawing the line, adjust the blending mode if necessary:
-  if ((color == '#230E0B' || color == '#FF0000') && rms > 10) {
+  if ((color == '#200F0B' || color == '#FF0000') && rms > 10) {
     visualizerContext.globalCompositeOperation = 'source-over';
   }
 

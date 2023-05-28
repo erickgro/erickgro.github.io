@@ -23,7 +23,7 @@
     --main-hovered: #D591E5;
     --main-active: #C47AD7;
     --secondary-active: #1B0720;
-    --stop-color: #000000;
+    --stop-color: #200F0B;
     --background-color: #0D0C0B;
 }
 
@@ -100,7 +100,6 @@ button {
     padding: 0;
     margin: 0;
     outline: none;
-    box-shadow: none;
     user-select: none;
     position: relative;
 }
@@ -124,7 +123,7 @@ button {
 }
 
 #start-button.clicked {
-    border-color: #230E0B;
+    border: 1px solid var(--stop-color);
 }
 
 .microphone-icon {
@@ -176,7 +175,7 @@ button {
 }
 
 #stop-button:hover, #stop-button:active {
-    background-color: #230E0B;
+    background-color: var(--stop-color);
 }
 
 
@@ -308,7 +307,7 @@ a:link, a:visited, a:hover, a:active {
     justify-content: center;
     align-items: center;
     flex-grow: 1;
-    background-color: transparent;
+    background-color: none;
 }
 
 #control-bar #copy-all {
