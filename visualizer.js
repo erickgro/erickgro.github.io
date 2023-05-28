@@ -105,7 +105,7 @@ function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength
   }
 
   // Before drawing the line, adjust the blending mode if necessary:
-  if ((color == '#3E1916' || color == '#FF0000') && rms > 10) {
+  if ((color == '#230E0B' || color == '#FF0000') && rms > 10) {
     visualizerContext.globalCompositeOperation = 'source-over';
   }
 
