@@ -59,7 +59,7 @@ function visualize() {
   // Map rms (0-255) to a sensitivity range, e.g., 11-15
   let sensitivity = map(rms, 0, 255, 2, 35);
 
-  if (rms != 0) {
+  if (rms > 15) {
     visualizerContext.globalCompositeOperation = 'screen';
   } else {
     visualizerContext.globalCompositeOperation = 'source-over';
