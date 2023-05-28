@@ -162,7 +162,7 @@ button {
     background-color: var(--background-color);        
     border-color: black;
     color: white;
-    z-index: 1;
+    z-index: 99;
     position: relative;
 }
 
