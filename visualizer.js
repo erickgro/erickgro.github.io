@@ -59,7 +59,11 @@ function visualize() {
   // Map rms (0-255) to a sensitivity range, e.g., 11-15
   let sensitivity = map(rms, 0, 255, 2, 35);
 
-  visualizerContext.globalCompositeOperation = 'screen';
+  if (rms != 0) {
+    visualizerContext.globalCompositeOperation = 'screen';
+  } else {
+    visualizerContext.globalCompositeOperation = 'source-over';
+  }
 
   let displacementScale = 0.012; // Change this value to your desired scaling factor
   let displacement = rms > 96 ? displacementScale * (rms - 10) : 0;
@@ -89,15 +93,22 @@ function map(value, start1, stop1, start2, stop2) {
   return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
 }
 
-  function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength, color, sensitivity, normalizedDataArray, maxBarLength, rms, maxLineWidth, displacement = 0, staticOpacity = false) {
+function drawVisualizerLine(centerX, centerY, baseRadius, barWidth, bufferLength, color, sensitivity, normalizedDataArray, maxBarLength, rms, maxLineWidth, displacement = 0, staticOpacity = false) {
 
-  let localDataArray = [...normalizedDataArray];
+  let localDataArray = [...normalizedDataArray];  // Make a local copy of the data array
   
+  // Create a mirror effect from last quarter of array to the first quarter with varying intensity
   for (let i = 0; i < bufferLength / 4; i++) {
-    let intensity = (1 - i / (bufferLength / 4)); 
+    // Increase intensity towards the start (angle 0) and decrease as we move towards angle 90
+    let intensity = (1 - i / (bufferLength / 4)); // From 1 down to 0 over the first quarter
     localDataArray[i] = (localDataArray[i] * (1 - intensity) + localDataArray[bufferLength - i - 1] * intensity);
   }
-  
+
+  // Before drawing the line, adjust the blending mode if necessary:
+  if ((color == '#3E1916' || color == '#FF0000') && rms > 10) {
+    visualizerContext.globalCompositeOperation = 'source-over';
+  }
+
   for (let i = 0; i < bufferLength; i++) {
     let barLength = Math.min(localDataArray[i] * sensitivity, maxBarLength);
     barLength = barLength * (baseRadius / maxBarLength);
@@ -119,7 +130,7 @@ function map(value, start1, stop1, start2, stop2) {
   let opacity;
   if (staticOpacity) {
     opacity = 1; // static opacity for the red line
-    color = rms < 15 ? '#230E0B' : '#FF0000'; // Change color based on rms value
+    color = rms < 15 ? '#3E1916' : '#FF0000'; // Change color based on rms value
   } else {
     if (rms < 15) {
       opacity = 0; // If rms is near zero, make line fully transparent
@@ -128,9 +139,14 @@ function map(value, start1, stop1, start2, stop2) {
     }
   }
   
-  visualizerContext.strokeStyle = color + Math.round(opacity * 255).toString(16).padStart(2, '0');
+  visualizerContext.strokeStyle = color + Math.round(opacity * 255).toString(16).padStart(2, '0'); // append the opacity to the color
 
   visualizerContext.stroke();
+
+  // After drawing the line, reset the blending mode if necessary:
+  if ((color == '#3E1916' || color == '#FF0000') && rms > 15) {
+    visualizerContext.globalCompositeOperation = 'screen';
+  }
 }
 
 function stopVisualizer() {
