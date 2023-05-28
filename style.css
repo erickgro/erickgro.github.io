@@ -176,8 +176,10 @@ button {
 
 #stop-button:hover, #stop-button:active {
     background-color: var(--stop-color);
-}
+    width: 120px;
+    height: 120px;
 
+}
 
 #transcript-list {
     list-style: none;
