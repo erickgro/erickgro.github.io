@@ -27,9 +27,10 @@
     --background-color: #0D0C0B;
 }
 
-.borderless {
+#stop-button.borderless {
     border: none !important;
 }
+
 
 * {
     scrollbar-width: thin;

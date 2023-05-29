@@ -269,7 +269,6 @@ startButton.addEventListener('click', function() {
             startButton.style.display = 'none';
             stopButton.classList.add('borderless'); // Add borderless class to stopButton
         });
-
     });
     // Hide copyAllButton when recording starts
     copyAllButton.style.display = 'none';
