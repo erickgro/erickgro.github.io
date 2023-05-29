@@ -266,8 +266,8 @@ startButton.addEventListener('click', function() {
 
         // Use transitionend event to hide the button after it's faded out
         startButton.addEventListener('transitionend', function() {
-            startButton.style.display = 'none';
-            stopButton.style.border = 'none';
+            startButton.style.display = 'none';   
+            stopButton.style.border = 'none';  // Remove the border of stopButton       
         });
 
     });
