@@ -123,7 +123,7 @@ button {
 }
 
 #start-button.clicked {
-    border: 0px solid #DB604E;
+    border: 1px solid #DB604E;
 }
 
 .microphone-icon {
@@ -160,7 +160,7 @@ button {
 #stop-button {
     line-height: 0;
     background-color: var(--background-color);        
-    border-color: black;
+    border: 1px solid #DB604E;
     color: white;
     z-index: 99;
     position: relative;

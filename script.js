@@ -257,7 +257,7 @@ startButton.addEventListener('click', function() {
 
     startButton.classList.add('moving');
     startButton.classList.add('clicked');
-
+    
     startButton.addEventListener('animationend', function() {
         // start to fade out the button
         startButton.style.opacity = '0';
@@ -267,6 +267,7 @@ startButton.addEventListener('click', function() {
         // Use transitionend event to hide the button after it's faded out
         startButton.addEventListener('transitionend', function() {
             startButton.style.display = 'none';
+            stopButton.style.border = 'none';
         });
 
     });
