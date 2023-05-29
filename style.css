@@ -27,11 +27,6 @@
     --background-color: #0D0C0B;
 }
 
-#stop-button.borderless {
-    border: none !important;
-}
-
-
 * {
     scrollbar-width: thin;
     scrollbar-color: var(--red-color) transparent;
@@ -128,7 +123,7 @@ button {
 }
 
 #start-button.clicked {
-    border: 1px solid #DB604E;
+    border: 0px solid #DB604E;
 }
 
 .microphone-icon {
@@ -165,7 +160,7 @@ button {
 #stop-button {
     line-height: 0;
     background-color: var(--background-color);        
-    border: 1px solid blue;
+    border-color: black;
     color: white;
     z-index: 99;
     position: relative;

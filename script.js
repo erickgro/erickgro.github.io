@@ -267,12 +267,13 @@ startButton.addEventListener('click', function() {
         // Use transitionend event to hide the button after it's faded out
         startButton.addEventListener('transitionend', function() {
             startButton.style.display = 'none';
-            stopButton.classList.add('borderless'); // Add borderless class to stopButton
         });
+
     });
     // Hide copyAllButton when recording starts
     copyAllButton.style.display = 'none';
 });
+
 
 stopButton.addEventListener('click', function() {
     
