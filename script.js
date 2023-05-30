@@ -1,6 +1,10 @@
 import { startVisualizer, stopVisualizer } from './visualizer.js';
 
 document.addEventListener('DOMContentLoaded', (event) => {
+    // Show the loading element at the start
+    let loadingElement = document.getElementById('loading-element');
+    loadingElement.style.display = 'block'; 
+
     // Initialize variables and get UI elements    
     let mediaStream;
     let VoiceRecognized = false;
@@ -324,4 +328,5 @@ copyAllButton.addEventListener('click', function() {
     controlBar.removeChild(textarea);
 
 });
+    loadingElement.style.display = 'none';
 });
