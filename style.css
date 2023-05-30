@@ -22,7 +22,7 @@
     --main-color: #DCA9E9;
     --main-hovered: #D591E5;
     --main-active: #C47AD7;
-    --secondary-active: #1B0720;
+    --secondary-active: #0E0311;
     --stop-color: #200F0B;
     --background-color: #0D0C0B;
 }
@@ -348,7 +348,9 @@ a:link, a:visited, a:hover, a:active {
 #copy-all:hover{
    border: 1px solid var(--main-color); 
 }
-
+#copy-all:active{
+    background-color: var(--secondary-active);;
+}
 /*.label {
     position: relative;
     display: flex;
