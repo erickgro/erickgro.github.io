@@ -403,19 +403,6 @@ audio::-webkit-media-controls-volume-control-container {
     display: none;
 }
 
-#loading-element {
-    display: none;  // It should be hidden by default
-    position: fixed;  // It should overlay the whole screen
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);  // Semi-transparent black
-    color: white;  // The text color
-    font-size: 2em;
-    text-align: center;
-    padding-top: 20%;  // To vertically center the text
-}
 
 
 /*#start-button::before, #start-button::after {
