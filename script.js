@@ -47,7 +47,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                 if (event.results[i].isFinal) {
                     let transcript = event.results[i][0].transcript;
-                    let timestamp = new Date((voiceRecognitionStart - 2) * 1000).toISOString().substr(14, 5);
+                    let hours = Math.floor((voiceRecognitionStart - 2) / 3600);
+                    let minutes = Math.floor(((voiceRecognitionStart - 2) % 3600) / 60);
+                    let seconds = (voiceRecognitionStart - 2) % 60;
+
+                    let hoursStr = hours.toString();
+                    let minutesStr = minutes.toString().padStart(2, '0');
+                    let secondsStr = seconds.toString().padStart(2, '0');
+
+                    let timestamp;
+
+                    if (hours > 0) {
+                        timestamp = `${hoursStr}:${minutesStr}:${secondsStr}`;
+                    } else {
+                        timestamp = `${minutesStr}:${secondsStr}`;
+                    }
 
                     transcripts.push({timestamp: timestamp, transcript: transcript});
 
@@ -61,17 +75,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                     if (!stopRequested) {
                         timestampElement.className += ' active-timestamp';
-                        } else {
-                            timestampElement.className += ' stopped-timestamp';
-                        }
+                    } else {
+                        timestampElement.className += ' stopped-timestamp';
+                    }
 
                     link.appendChild(timestampElement);
 
                     link.onclick = function() {
-                        let [minutes, seconds] = timestamp.split(':');
-                        audioElement.currentTime = minutes * 60 + Number(seconds);
+                        let [hourOrMinute, minuteOrSecond, second] = timestamp.split(':');
+                        if (second === undefined) {  // format is mm:ss
+                            audioElement.currentTime = hourOrMinute * 60 + Number(minuteOrSecond);
+                        } else {  // format is hh:mm:ss
+                            audioElement.currentTime = hourOrMinute * 3600 + minuteOrSecond * 60 + Number(second);
+                        }
                         audioElement.play();
-                        return false; 
+                        return false;
                     };
 
                     listItem.appendChild(link);
@@ -79,7 +97,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     let transcriptElement = document.createElement('span');
                     transcriptElement.className = 'transcript';
                     transcriptElement.textContent = `${transcript}`;
-                    
+
                     listItem.appendChild(document.createElement('br'));
                     listItem.appendChild(transcriptElement);
 
@@ -103,12 +121,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                     copyButton.addEventListener('mousedown', function() {
                         this.classList.add('copy-button-pressed');
-                     });
+                    });
 
                     copyButton.addEventListener('mouseup', function() {
                         this.classList.remove('copy-button-pressed');
                     });
-
 
                     listItem.appendChild(copyButton);
                     transcriptList.appendChild(listItem);
@@ -129,6 +146,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 startTimer();
             }, 1600);
         }
+
 
         recognition.onend = function() {
             isListening = false;
@@ -163,14 +181,18 @@ function startGlobalTimer() {
     globalTimer = 0;
     globalIntervalId = setInterval(function() {
         globalTimer++;
-        let minutes = Math.floor(globalTimer / 60);
+        let hours = Math.floor(globalTimer / 3600);
+        let minutes = Math.floor((globalTimer % 3600) / 60);
         let seconds = globalTimer % 60;
 
-        let minutesStr = minutes < 10 ? minutes.toString() : minutes.toString().padStart(2, '0');
+        let hoursStr = hours.toString();
+        let minutesStr = minutes.toString().padStart(2, '0');
         let secondsStr = seconds.toString().padStart(2, '0');
 
         // Display the timer
-        if (minutes > 0) {
+        if (hours > 0) {
+            globalTimerDisplay.textContent = `${hoursStr}:${minutesStr}:${secondsStr}`;
+        } else if (minutes > 0) {
             globalTimerDisplay.textContent = `${minutesStr}:${secondsStr}`;
         } else {
             globalTimerDisplay.textContent = `${secondsStr}`;
@@ -275,8 +297,7 @@ startButton.addEventListener('click', function() {
 });
 
 
-stopButton.addEventListener('click', function() {
-    
+stopButton.addEventListener('click', function() {    
     stopListening();
     const timestamps = document.querySelectorAll('.timestamp');
     timestamps.forEach((timestamp) => {
