@@ -65,7 +65,7 @@ function visualize() {
     visualizerContext.globalCompositeOperation = 'source-over';
   }
 
-  let displacementScale = 0.012; // Change this value to your desired scaling factor
+  let displacementScale = 0.017;
   let displacement = rms > 96 ? displacementScale * (rms - 10) : 0;
 
   let centerXRed = centerX + displacement;
@@ -75,15 +75,15 @@ function visualize() {
 
 
   visualizerContext.beginPath();
-  drawVisualizerLine(centerXRed, centerYRed, baseRadius, barWidth, newBufferLength, '#DB604E', sensitivity + 13, normalizedDataArray, maxBarLength, rms, 2.8, -displacement, true);
+  drawVisualizerLine(centerXRed, centerYRed, baseRadius, barWidth, newBufferLength, '#230E0B', sensitivity + 13, normalizedDataArray, maxBarLength, rms, 3.2, -displacement, true);
   visualizerContext.stroke();
 
   visualizerContext.beginPath();
-  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 10, normalizedDataArray,maxBarLength, rms, 2.8);
+  drawVisualizerLine(centerX, centerY, baseRadius, barWidth, newBufferLength, '#00FF00', sensitivity + 10.5, normalizedDataArray,maxBarLength, rms, 2.8);
   visualizerContext.stroke();
 
   visualizerContext.beginPath();
-  drawVisualizerLine(centerXBlue, centerYBlue, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity +11.5, normalizedDataArray, maxBarLength, rms, 4.1, +displacement);
+  drawVisualizerLine(centerXBlue, centerYBlue, baseRadius, barWidth, newBufferLength, '#0000FF', sensitivity +12, normalizedDataArray, maxBarLength, rms, 4, +displacement);
   visualizerContext.stroke();
 
   visualizerContext.globalCompositeOperation = 'source-over';
