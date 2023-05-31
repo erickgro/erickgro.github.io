@@ -217,6 +217,7 @@ function startListening() {
             mediaRecorder.start();
             startVisualizer(mediaStream);  // START VISUALIZER
             startGlobalTimer();
+            stopButton.style.border = 'none';
 
             mediaRecorder.ondataavailable = function(e) {
                 recordedChunks.push(e.data);
@@ -280,7 +281,7 @@ startButton.addEventListener('click', function() {
         startButton.style.opacity = '0';
         stopButton.style.display = 'block';
         startListening();
-        
+
         setTimeout(() => {
             startButton.style.display = 'none';
         }, 500);
