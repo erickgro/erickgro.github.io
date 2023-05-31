@@ -17,7 +17,7 @@ function initAudioContext() {
 
 visualizerCanvas = document.createElement('canvas');
 visualizerCanvas.width = 580;
-visualizerCanvas.height = 200;
+visualizerCanvas.height = 400;
 
 document.getElementById('control-bar').appendChild(visualizerCanvas);
 visualizerCanvas.style.display = 'none';
@@ -54,7 +54,7 @@ function visualize() {
 
   let rms = Math.sqrt(dataArray.reduce((acc, val) => acc + val ** 2, 0) / dataArray.length);
 
-  console.log("RMS Value: " + rms);
+  //console.log("RMS Value: " + rms);
 
   // Map rms (0-255) to a sensitivity range, e.g., 11-15
   let sensitivity = map(rms, 0, 255, 2, 35);

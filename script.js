@@ -284,7 +284,6 @@ startButton.addEventListener('click', function() {
 
         setTimeout(() => {
             startButton.style.display = 'none';
-            console.log("HOLA FUTBOL");
         }, 500);
     });
     copyAllButton.style.display = 'none';
