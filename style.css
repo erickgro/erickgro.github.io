@@ -126,6 +126,26 @@ button {
     border: 1px solid #DB604E;
 }
 
+#start-button.clicked .microphone-icon:nth-child(1) {
+    opacity: 0; 
+}
+
+#start-button.clicked .microphone-icon:nth-child(2) {
+    transform: translate(0px, 0px);
+    opacity: 1; 
+}
+
+#start-button.clicked .microphone-icon:nth-child(3) {
+    transform: translate(2.6px, 2.6px);
+    opacity: 1; 
+}
+
+#start-button.clicked .microphone-icon:nth-child(4) {
+    transform: translate(-2.6px, -2.6px);
+    opacity: 1; 
+}
+
+
 .microphone-icon {
     position: absolute;
     width: 24px;
