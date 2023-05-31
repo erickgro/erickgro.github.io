@@ -45,9 +45,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                 if (event.results[i].isFinal) {
                     let transcript = event.results[i][0].transcript;
-                    let hours = Math.floor((voiceRecognitionStart - 2) / 3600);
-                    let minutes = Math.floor(((voiceRecognitionStart - 2) % 3600) / 60);
-                    let seconds = (voiceRecognitionStart - 2) % 60;
+
+                    if (voiceRecognitionStart < 2) {
+                        voiceRecognitionStart = 0;
+                    } else {
+                        voiceRecognitionStart -= 2;
+                    }
+
+                    let hours = Math.floor(voiceRecognitionStart / 3600);
+                    let minutes = Math.floor((voiceRecognitionStart % 3600) / 60);
+                    let seconds = voiceRecognitionStart % 60;
 
                     let hoursStr = hours.toString();
                     let minutesStr = minutes.toString().padStart(2, '0');
@@ -60,7 +67,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     } else {
                         timestamp = `${minutesStr}:${secondsStr}`;
                     }
-
+                    
                     transcripts.push({timestamp: timestamp, transcript: transcript});
 
                     let listItem = document.createElement('li');
