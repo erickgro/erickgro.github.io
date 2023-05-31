@@ -277,11 +277,10 @@ startButton.addEventListener('click', function() {
     startButton.classList.add('moving');
     startButton.classList.add('clicked');
     startButton.addEventListener('animationend', function() {
-
         startButton.style.opacity = '0';
         stopButton.style.display = 'block';
         startListening();
-
+        
         setTimeout(() => {
             startButton.style.display = 'none';
         }, 500);
@@ -297,10 +296,8 @@ stopButton.addEventListener('click', function() {
     timestamp.classList.remove('active-timestamp');
     timestamp.classList.add('stopped-timestamp');
 });
-    stopButtonContainer.style.display = 'none';
-    
+    stopButtonContainer.style.display = 'none';    
     startButton.style.display = 'none';
-
     copyAllButton.style.display = 'block';
 });
 
