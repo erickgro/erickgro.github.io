@@ -1,7 +1,6 @@
 import { startVisualizer, stopVisualizer } from './visualizer.js';
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    // Initialize variables and get UI elements    
     let mediaStream;
     let VoiceRecognized = false;
     let timer = 0;
@@ -19,8 +18,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const controlBar = document.getElementById('control-bar');
     let link = document.createElement('a');
     link.href = '#';
-    link.classList.add('link-disabled');  // Add the 'link-disabled' class initially
-
+    link.classList.add('link-disabled');
 
     let recognition;
     let mediaRecorder;
@@ -189,7 +187,6 @@ function startGlobalTimer() {
         let minutesStr = minutes.toString().padStart(2, '0');
         let secondsStr = seconds.toString().padStart(2, '0');
 
-        // Display the timer
         if (hours > 0) {
             globalTimerDisplay.textContent = `${hoursStr}:${minutesStr}:${secondsStr}`;
         } else if (minutes > 0) {
@@ -219,7 +216,7 @@ function startListening() {
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
             startVisualizer(mediaStream);  // START VISUALIZER
-            startGlobalTimer();  // Start the global timer only after access to the mic is granted
+            startGlobalTimer();
 
             mediaRecorder.ondataavailable = function(e) {
                 recordedChunks.push(e.data);
@@ -279,20 +276,17 @@ startButton.addEventListener('click', function() {
 
     startButton.classList.add('moving');
     startButton.classList.add('clicked');
-    
     startButton.addEventListener('animationend', function() {
-        // start to fade out the button
+
         startButton.style.opacity = '0';
         stopButton.style.display = 'block';
         startListening();
 
-        // Use transitionend event to hide the button after it's faded out
-        startButton.addEventListener('transitionend', function() {
+        setTimeout(() => {
             startButton.style.display = 'none';
-        });
-
+            console.log("HOLA FUTBOL");
+        }, 500);
     });
-    // Hide copyAllButton when recording starts
     copyAllButton.style.display = 'none';
 });
 
@@ -315,10 +309,7 @@ copyAllButton.addEventListener('click', function() {
     let textarea = document.createElement('textarea');
     let allTranscriptions = transcripts.map(t => `${t.timestamp} - ${t.transcript}`).join('\n');
     textarea.textContent = allTranscriptions;
-    
-    // Append textarea to audio control bar
     controlBar.appendChild(textarea);
-
     textarea.select();
     document.execCommand('copy');
     controlBar.removeChild(textarea);
