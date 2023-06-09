@@ -46,11 +46,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 if (event.results[i].isFinal) {
                     let transcript = event.results[i][0].transcript;
 
-                    if (voiceRecognitionStart < 2) {
-                        voiceRecognitionStart = 0;
-                    } else {
-                        voiceRecognitionStart -= 2;
-                    }
+                    // if (voiceRecognitionStart < 2) {
+                    //     voiceRecognitionStart = 0;
+                    // } else {
+                    //     voiceRecognitionStart -= 2;
+                    // }
 
                     let hours = Math.floor(voiceRecognitionStart / 3600);
                     let minutes = Math.floor((voiceRecognitionStart % 3600) / 60);
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     } else {
                         timestamp = `${minutesStr}:${secondsStr}`;
                     }
-                    
+
                     transcripts.push({timestamp: timestamp, transcript: transcript});
 
                     let listItem = document.createElement('li');
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 voiceStatus.textContent = 'Undetected';
                 voiceStatus.style.color = 'red';
                 startTimer();
-            }, 1600);
+            }, 1000);
         }
 
 
@@ -179,7 +179,7 @@ function startTimer() {
             timer++;
             timerDisplay.textContent = timer;
         }
-    }, 1000);
+    }, 200);
 }
 
 function startGlobalTimer() {
