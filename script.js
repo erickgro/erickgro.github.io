@@ -41,122 +41,126 @@ document.addEventListener('DOMContentLoaded', (event) => {
             isListening = true;
         }
 
-        let lastTranscript = '';
+    let lastFinalTranscript = '';
 
-        recognition.onresult = function(event) {
-            console.log('Recognition result received');
-            for (let i = event.resultIndex; i < event.results.length; i++) {
-                if (VoiceRecognized === false) {
-                    voiceRecognitionStart = globalTimer;
-                    VoiceRecognized = true;
-                }
+    recognition.onresult = function(event) {
+        let interimTranscript = '';
+        let currentTranscript = '';
 
-                if (event.results[i].isFinal) {
-                    let transcript = event.results[i][0].transcript;
-                    let hours = Math.floor(voiceRecognitionStart / 3600);
-                    let minutes = Math.floor((voiceRecognitionStart % 3600) / 60);
-                    let seconds = voiceRecognitionStart % 60;
-                    let hoursStr = hours.toString();
-                    let minutesStr = minutes.toString().padStart(2, '0');
-                    let secondsStr = seconds.toString().padStart(2, '0');
-                    let timestamp;
-
-                    if(transcript === lastTranscript) {
-                        console.log('Duplicate transcript detected. Skipping...');
-                        continue;
-                    }
-            
-                    lastTranscript = transcript;
-
-                    if (hours > 0) {
-                        timestamp = `${hoursStr}:${minutesStr}:${secondsStr}`;
-                    } else {
-                        timestamp = `${minutesStr}:${secondsStr}`;
-                    }
-
-                    transcripts.push({timestamp: timestamp, transcript: transcript});
-
-                    let listItem = document.createElement('li');
-                    let link = document.createElement('a');
-                    link.href = '#';
-
-                    let timestampElement = document.createElement('span');
-                    timestampElement.className = 'timestamp';
-                    timestampElement.textContent = timestamp;
-
-                    if (!stopRequested) {
-                        timestampElement.className += ' active-timestamp';
-                    } else {
-                        timestampElement.className += ' stopped-timestamp';
-                    }
-
-                    link.appendChild(timestampElement);
-
-                    link.onclick = function() {
-                        let [hourOrMinute, minuteOrSecond, second] = timestamp.split(':');
-                        if (second === undefined) {  // format is mm:ss
-                            audioElement.currentTime = hourOrMinute * 60 + Number(minuteOrSecond);
-                        } else {  // format is hh:mm:ss
-                            audioElement.currentTime = hourOrMinute * 3600 + minuteOrSecond * 60 + Number(second);
-                        }
-                        audioElement.play();
-                        return false;
-                    };
-
-                    listItem.appendChild(link);
-
-                    let transcriptElement = document.createElement('span');
-                    transcriptElement.className = 'transcript';
-                    transcriptElement.textContent = `${transcript}`;
-
-                    listItem.appendChild(document.createElement('br'));
-                    listItem.appendChild(transcriptElement);
-
-                    let copyButton = document.createElement('button');
-                    copyButton.className = 'copy-button';
-
-                    let copyIcon = document.createElement('img');
-                    copyIcon.src = 'images/copy.svg';
-                    copyIcon.alt = 'Copy';
-
-                    copyButton.appendChild(copyIcon);
-
-                    copyButton.addEventListener('click', function() {
-                        let textarea = document.createElement('textarea');
-                        textarea.textContent = `${timestamp}\n${transcript}`;
-                        document.body.appendChild(textarea);
-                        textarea.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(textarea);
-                    });
-
-                    copyButton.addEventListener('mousedown', function() {
-                        this.classList.add('copy-button-pressed');
-                    });
-
-                    copyButton.addEventListener('mouseup', function() {
-                        this.classList.remove('copy-button-pressed');
-                    });
-
-                    listItem.appendChild(copyButton);
-                    transcriptList.appendChild(listItem);
-                }
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (VoiceRecognized === false) {
+                voiceRecognitionStart = globalTimer;
+                VoiceRecognized = true;
             }
 
-            voiceStatus.textContent = 'Voice detected';
-            voiceStatus.style.color = 'green';
-
-            timer = 0;
-            timerDisplay.textContent = timer;
-
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(function() {
-                VoiceRecognized = false;
-                voiceStatus.textContent = 'Undetected';
-                voiceStatus.style.color = 'red';
-                startTimer();
-            }, 1000);
+            if (event.results[i].isFinal) {
+                currentTranscript += event.results[i][0].transcript;
+            } else {
+                interimTranscript += event.results[i][0].transcript;
+            }
         }
+
+        if (currentTranscript !== lastFinalTranscript) {
+            lastFinalTranscript = currentTranscript;
+
+            let hours = Math.floor(voiceRecognitionStart / 3600);
+            let minutes = Math.floor((voiceRecognitionStart % 3600) / 60);
+            let seconds = voiceRecognitionStart % 60;
+
+            let hoursStr = hours.toString();
+            let minutesStr = minutes.toString().padStart(2, '0');
+            let secondsStr = seconds.toString().padStart(2, '0');
+
+            let timestamp;
+
+            if (hours > 0) {
+                timestamp = `${hoursStr}:${minutesStr}:${secondsStr}`;
+            } else {
+                timestamp = `${minutesStr}:${secondsStr}`;
+            }
+
+            transcripts.push({ timestamp: timestamp, transcript: currentTranscript });
+
+            let listItem = document.createElement('li');
+            let link = document.createElement('a');
+            link.href = '#';
+
+            let timestampElement = document.createElement('span');
+            timestampElement.className = 'timestamp';
+            timestampElement.textContent = timestamp;
+
+            if (!stopRequested) {
+                timestampElement.className += ' active-timestamp';
+            } else {
+                timestampElement.className += ' stopped-timestamp';
+            }
+
+            link.appendChild(timestampElement);
+
+            link.onclick = function() {
+                let [hourOrMinute, minuteOrSecond, second] = timestamp.split(':');
+                if (second === undefined) {  // format is mm:ss
+                    audioElement.currentTime = hourOrMinute * 60 + Number(minuteOrSecond);
+                } else {  // format is hh:mm:ss
+                    audioElement.currentTime = hourOrMinute * 3600 + minuteOrSecond * 60 + Number(second);
+                }
+                audioElement.play();
+                return false;
+            };
+
+            listItem.appendChild(link);
+
+            let transcriptElement = document.createElement('span');
+            transcriptElement.className = 'transcript';
+            transcriptElement.textContent = finalTranscript;
+
+            listItem.appendChild(document.createElement('br'));
+            listItem.appendChild(transcriptElement);
+
+            let copyButton = document.createElement('button');
+            copyButton.className = 'copy-button';
+
+            let copyIcon = document.createElement('img');
+            copyIcon.src = 'images/copy.svg';
+            copyIcon.alt = 'Copy';
+
+            copyButton.appendChild(copyIcon);
+
+            copyButton.addEventListener('click', function() {
+                let textarea = document.createElement('textarea');
+                textarea.textContent = `${timestamp}\n${finalTranscript}`;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            });
+
+            copyButton.addEventListener('mousedown', function() {
+                this.classList.add('copy-button-pressed');
+            });
+
+            copyButton.addEventListener('mouseup', function() {
+                this.classList.remove('copy-button-pressed');
+            });
+
+            listItem.appendChild(copyButton);
+            transcriptList.appendChild(listItem);
+        }
+
+        voiceStatus.textContent = 'Voice detected';
+        voiceStatus.style.color = 'green';
+
+        timer = 0;
+        timerDisplay.textContent = timer;
+
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(function() {
+            VoiceRecognized = false;
+            voiceStatus.textContent = 'Undetected';
+            voiceStatus.style.color = 'red';
+            startTimer();
+        }, 1000);
+    }
 
 
         recognition.onend = function() {
