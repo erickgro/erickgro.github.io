@@ -153,17 +153,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
         recognition.onend = function() {
-            console.log('Recognition ended');
+            console.log('Recognition ended because:', reason);
             isListening = false;
-            if(!stopRequested && !isListening)
-        {
-            recognition.start();
+            if(!stopRequested && !isListening) {
+                setTimeout(() => recognition.start(), 1000);  // delay of 1 second
+            }
         }
-    }
 
     recognition.onerror = function(event) {
-        console.log('Recognition error: ', event.error);
-        console.log('Error occurred in recognition: ' + event.error);
+        console.log('Recognition error: ', + event.error);
         if (event.error === 'no-speech') {
             recognition.start();
         }
