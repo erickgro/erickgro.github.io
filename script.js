@@ -37,10 +37,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
         recognition.lang = 'es-MX';
 
         recognition.onstart = function() {
+            console.log('Recognition started');
             isListening = true;
         }
 
         recognition.onresult = function(event) {
+            console.log('Recognition result received');
             for (let i = event.resultIndex; i < event.results.length; i++) {
                 if (VoiceRecognized === false) {
                     voiceRecognitionStart = globalTimer;
@@ -151,6 +153,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
         recognition.onend = function() {
+            console.log('Recognition ended');
             isListening = false;
             if(!stopRequested && !isListening)
         {
@@ -159,6 +162,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 
     recognition.onerror = function(event) {
+        console.log('Recognition error: ', event.error);
         console.log('Error occurred in recognition: ' + event.error);
         if (event.error === 'no-speech') {
             recognition.start();
