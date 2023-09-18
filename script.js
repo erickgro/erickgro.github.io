@@ -45,22 +45,29 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
 
         recognition.onresult = function(event) {
-            console.log('Recognition result received');
+            console.log('Recognition result received');//SISEÑOR
+            
+            let currentTranscript = "";
             for (let i = event.resultIndex; i < event.results.length; i++) {
+                currentTranscript += event.results[i][0].transcript;
+                
                 if (VoiceRecognized === false) {
                     voiceRecognitionStart = globalTimer;
                     VoiceRecognized = true;
                 }
 
                 if (event.results[i].isFinal) {
-                    let transcript = event.results[i][0].transcript;
+                    // We only consider final results to avoid repeated entries.
+                    
+                    let transcript = currentTranscript.trim();
+                    currentTranscript = ""; // Reset after using
 
                     // Skip empty transcripts
-                    if (transcript.trim() === '') {
+                    if (transcript === '') {
                         continue;
                     }
 
-                    // New check for avoiding duplicates using the set
+                    // Check for avoiding duplicates using the set
                     if (lastTranscriptsSet.has(transcript)) {
                         console.log('Duplicate transcript detected. Skipping...');
                         continue;
