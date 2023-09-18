@@ -29,6 +29,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     let recordedChunks = [];
     let audioElement = null;
     let transcripts = [];
+    
+    // New set for storing all transcripts to avoid duplication
+    let lastTranscriptsSet = new Set();
 
     function setupSpeechRecognition() {
         recognition = new webkitSpeechRecognition();
@@ -41,8 +44,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             isListening = true;
         }
 
-        let lastTranscript = '';
-
         recognition.onresult = function(event) {
             console.log('Recognition result received');
             for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -53,6 +54,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                 if (event.results[i].isFinal) {
                     let transcript = event.results[i][0].transcript;
+
+                    // Skip empty transcripts
+                    if (transcript.trim() === '') {
+                        continue;
+                    }
+
+                    // New check for avoiding duplicates using the set
+                    if (lastTranscriptsSet.has(transcript)) {
+                        console.log('Duplicate transcript detected. Skipping...');
+                        continue;
+                    }
+                    lastTranscriptsSet.add(transcript);
+
                     let hours = Math.floor(voiceRecognitionStart / 3600);
                     let minutes = Math.floor((voiceRecognitionStart % 3600) / 60);
                     let seconds = voiceRecognitionStart % 60;
@@ -60,13 +74,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     let minutesStr = minutes.toString().padStart(2, '0');
                     let secondsStr = seconds.toString().padStart(2, '0');
                     let timestamp;
-
-                    if(transcript === lastTranscript) {
-                        console.log('Duplicate transcript detected. Skipping...');
-                        continue;
-                    }
-            
-                    lastTranscript = transcript;
 
                     if (hours > 0) {
                         timestamp = `${hoursStr}:${minutesStr}:${secondsStr}`;
