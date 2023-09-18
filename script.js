@@ -41,6 +41,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
             isListening = true;
         }
 
+        let lastTranscript = '';
+
         recognition.onresult = function(event) {
             console.log('Recognition result received');
             for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -54,12 +56,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     let hours = Math.floor(voiceRecognitionStart / 3600);
                     let minutes = Math.floor((voiceRecognitionStart % 3600) / 60);
                     let seconds = voiceRecognitionStart % 60;
-
                     let hoursStr = hours.toString();
                     let minutesStr = minutes.toString().padStart(2, '0');
                     let secondsStr = seconds.toString().padStart(2, '0');
-
                     let timestamp;
+
+                    if(transcript === lastTranscript) {
+                        console.log('Duplicate transcript detected. Skipping...');
+                        continue;
+                    }
+            
+                    lastTranscript = transcript;
 
                     if (hours > 0) {
                         timestamp = `${hoursStr}:${minutesStr}:${secondsStr}`;
@@ -153,16 +160,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
         recognition.onend = function() {
-            console.log('Recognition ended because:', reason);
             isListening = false;
-            if(!stopRequested && !isListening) {
-                setTimeout(() => recognition.start(), 1000);  // delay of 1 second
+            console.log('Recognition ended.');
+            if (!stopRequested) {
+                setTimeout(() => {
+                    if(!isListening) {
+                        console.log('Attempting to restart recognition...');
+                        recognition.start();
+                    }
+                }, 1000); // Wait a second before trying to restart
             }
-        }
+        };
 
     recognition.onerror = function(event) {
-        console.log('Recognition error: ', + event.error);
+        console.log('Recognition error:', event.error);
         if (event.error === 'no-speech') {
+            console.log('No speech detected. Will attempt to restart...');
             recognition.start();
         }
     };
