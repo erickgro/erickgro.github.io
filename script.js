@@ -1,6 +1,10 @@
 import { startVisualizer, stopVisualizer } from './visualizer.js';
 
 document.addEventListener('DOMContentLoaded', (event) => {
+    if (!('webkitSpeechRecognition' in window)) {
+        alert('Your browser does not support webkitSpeechRecognition');
+        return;  // Exit early if the browser doesn't support it
+    }    
     let mediaStream;
     let VoiceRecognized = false;
     let timer = 0;
@@ -45,13 +49,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                 if (event.results[i].isFinal) {
                     let transcript = event.results[i][0].transcript;
-
-                    // if (voiceRecognitionStart < 2) {
-                    //     voiceRecognitionStart = 0;
-                    // } else {
-                    //     voiceRecognitionStart -= 2;
-                    // }
-
                     let hours = Math.floor(voiceRecognitionStart / 3600);
                     let minutes = Math.floor((voiceRecognitionStart % 3600) / 60);
                     let seconds = voiceRecognitionStart % 60;
