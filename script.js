@@ -1,6 +1,8 @@
 import { startVisualizer, stopVisualizer } from './visualizer.js';
 
 document.addEventListener('DOMContentLoaded', (event) => {
+
+
     if (!('webkitSpeechRecognition' in window)) {
         alert('Your browser does not support webkitSpeechRecognition');
         return;  // Exit early if the browser doesn't support it
@@ -29,9 +31,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
     let recordedChunks = [];
     let audioElement = null;
     let transcripts = [];
-    
-    // New set for storing all transcripts to avoid duplication
+
     let lastTranscriptsSet = new Set();
+    let wakeLock = null;
+
+    async function requestWakeLock() {
+        try {
+            wakeLock = await navigator.wakeLock.request('screen');
+            wakeLock.addEventListener('release', () => {
+                console.log('Wake Lock was released');
+            });
+            console.log('Wake Lock is active');
+        } catch (err) {
+            console.error(`${err.name}, ${err.message}`);
+        }
+    }
 
     function setupSpeechRecognition() {
         recognition = new webkitSpeechRecognition();
@@ -229,9 +243,12 @@ function stopGlobalTimer() {
 }
 
 function startListening() {
+    // Requesting wake lock when starting listening
+    requestWakeLock();
+
     stopRequested = false;
     setupSpeechRecognition();
-    if(!isListening) {
+    if (!isListening) {
         recognition.start();
     }
     startTimer();
@@ -241,7 +258,7 @@ function startListening() {
             mediaStream = stream;
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
-            startVisualizer(mediaStream);  // START VISUALIZER
+            startVisualizer(mediaStream);
             startGlobalTimer();
             stopButton.style.border = 'none';
 
@@ -252,6 +269,7 @@ function startListening() {
 }
 
 function stopListening() {
+    if (wakeLock !== null) wakeLock.release();
     stopRequested = true;
     recognition.stop();
     clearTimeout(timeoutId);
